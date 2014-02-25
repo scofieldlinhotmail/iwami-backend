@@ -32,7 +32,7 @@ public class StrategyDaoImpl extends JdbcDaoSupport implements StrategyDao {
 
 	@Override
 	public StrategyRate getStrategyRateByStrategyId(long strategyId) {
-		List<StrategyRate> rates = getJdbcTemplate().query("select strategy_id, skim, rate from " + SqlConstants.TABLE_STRATEGY_RATE + " where isel = ? and strategy_id = ?",
+		List<StrategyRate> rates = getJdbcTemplate().query("select strategy_id, skim, rate from " + SqlConstants.TABLE_STRATEGY_RATE + " where isdel = ? and strategy_id = ?",
 				new Object[]{0, strategyId}, new StrategyRateRowMapper());
 		if(rates != null && rates.size() > 0)
 			return rates.get(0);
@@ -111,7 +111,7 @@ class StrategyRowMapper implements RowMapper<Strategy>{
 		strategy.setSubName(rs.getString("subname"));
 		strategy.setIntr(rs.getString("intr"));
 		strategy.setRank(rs.getInt("rank"));
-		strategy.setIconSmall(rs.getString("icond_small"));
+		strategy.setIconSmall(rs.getString("icon_small"));
 		strategy.setIconBig(rs.getString("icon_big"));
 		Timestamp ts = rs.getTimestamp("lastmod_time");
 		if(ts != null)

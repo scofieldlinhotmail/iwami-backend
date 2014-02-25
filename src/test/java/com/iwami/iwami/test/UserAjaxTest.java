@@ -90,7 +90,7 @@ public class UserAjaxTest extends TestCase {
 	}
 	
 	public void testGetUserInfo(){
-		if(true){
+		if(flag){
 			UserAjax ajax = getAjax();
 			Map<String, String> params = new HashMap<String, String>();
 			System.out.println(ajax.getUserinfo(params));
