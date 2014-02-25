@@ -18,6 +18,8 @@ public class LuckyHistory {
 	
 	private long drawid;
 	
+	private int drawLevel;
+	
 	private int drawPrize;
 	
 	private String gift;
@@ -111,5 +113,13 @@ public class LuckyHistory {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public int getDrawLevel() {
+		return drawLevel;
+	}
+
+	public void setDrawLevel(int drawLevel) {
+		this.drawLevel = drawLevel;
 	}
 }

@@ -14,12 +14,6 @@ public class User {
 	
 	private int exchangePrize;
 	
-	private int newPrize;
-	
-	private int contPrize;
-	
-	private int commentPrize;
-	
 	private long lastCellPhone1;
 	
 	private String lastAlipayAccount;
@@ -42,6 +36,8 @@ public class User {
 	private String name;
 	
 	private String uuid;
+	
+	private String alias;
 	
 	private long cellPhone;
 	
@@ -75,30 +71,6 @@ public class User {
 
 	public void setExchangePrize(int exchangePrize) {
 		this.exchangePrize = exchangePrize;
-	}
-
-	public int getNewPrize() {
-		return newPrize;
-	}
-
-	public void setNewPrize(int newPrize) {
-		this.newPrize = newPrize;
-	}
-
-	public int getContPrize() {
-		return contPrize;
-	}
-
-	public void setContPrize(int contPrize) {
-		this.contPrize = contPrize;
-	}
-
-	public int getCommentPrize() {
-		return commentPrize;
-	}
-
-	public void setCommentPrize(int commentPrize) {
-		this.commentPrize = commentPrize;
 	}
 
 	public long getLastCellPhone1() {
@@ -242,5 +214,13 @@ public class User {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 }

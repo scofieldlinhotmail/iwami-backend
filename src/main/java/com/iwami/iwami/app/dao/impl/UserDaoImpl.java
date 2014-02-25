@@ -23,8 +23,8 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public User getUserById(long id) {
-		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, new_prize, cont_prize, comment_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
-				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, cell_phone, age, gender, job, address from " 
+		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
+				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
 				+ SqlConstants.TABLE_USER + " a join " + SqlConstants.TABLE_USERINFO + " b on a.id = b.userid where a.id = ? and a.isdel = 0 and b.isdel = 0", new Object[]{id}, new UserRowMapper());
 		if(users != null && users.size() > 0)
 			return users.get(0);
@@ -34,8 +34,8 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public User getUserByCellPhone(long cellPhone) {
-		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, new_prize, cont_prize, comment_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
-				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, cell_phone, age, gender, job, address from " 
+		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
+				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
 				+ SqlConstants.TABLE_USER + " a join " + SqlConstants.TABLE_USERINFO + " b on a.id = b.userid where b.cell_phone = ? and a.isdel = 0 and b.isdel = 0", new Object[]{cellPhone}, new UserRowMapper());
 		if(users != null && users.size() > 0)
 			return users.get(0);
@@ -49,7 +49,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	    int result = getJdbcTemplate().update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				return con.prepareStatement("insert into " + SqlConstants.TABLE_USER + "(current_prize, exchange_prize, new_prize, cont_prize, comment_prize, lastmod_time, lastmod_userid, isdel) values(0, 0, 0, 0, 0, now(), 0, 0)", Statement.RETURN_GENERATED_KEYS);
+				return con.prepareStatement("insert into " + SqlConstants.TABLE_USER + "(current_prize, exchange_prize, lastmod_time, lastmod_userid, isdel) values(0, 0, now(), 0, 0)", Statement.RETURN_GENERATED_KEYS);
 			}
 		}, holder);
 	    
@@ -62,7 +62,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public boolean addUserInfo4Register(User user) {
-		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_USERINFO + "(userid, name, uuid, cell_phone, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, now(), now(), ?, 0)", new Object[]{user.getId(), user.getName(), user.getUuid(), user.getCellPhone(), user.getId()});
+		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_USERINFO + "(userid, name, uuid, alias, cell_phone, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, now(), now(), ?, 0)", new Object[]{user.getId(), user.getName(), user.getUuid(), user.getAlias(), user.getCellPhone(), user.getId()});
 		if(count > 0)
 			return true;
 		else
@@ -70,7 +70,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	}
 
 	public boolean updateUser4Register(User user){
-		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USERINFO + " set name = ?, uuid = ?, cell_phone = ?, lastmod_time = now(), lastmod_userid = ? where userid = ?", new Object[]{user.getName(), user.getUuid(), user.getCellPhone(), user.getId(), user.getId()});
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USERINFO + " set name = ?, uuid = ?, alias = ?, cell_phone = ?, lastmod_time = now(), lastmod_userid = ? where userid = ?", new Object[]{user.getName(), user.getUuid(), user.getAlias(), user.getCellPhone(), user.getId(), user.getId()});
 		if(count > 0)
 			return true;
 		else
@@ -136,8 +136,6 @@ class UserRowMapper implements RowMapper<User>{
 		user.setAddress(rs.getString("address"));
 		user.setAge(rs.getInt("age"));
 		user.setCellPhone(rs.getLong("cell_phone"));
-		user.setCommentPrize(rs.getInt("comment_prize"));
-		user.setContPrize(rs.getInt("cont_prize"));
 		user.setCurrentPrize(rs.getInt("current_prize"));
 		user.setExchangePrize(rs.getInt("exchange_prize"));
 		user.setGender(rs.getInt("gender"));
@@ -151,8 +149,8 @@ class UserRowMapper implements RowMapper<User>{
 		user.setLastCellPhone2(rs.getLong("last_cell_phone_2"));
 		user.setLastName(rs.getString("last_name"));
 		user.setName(rs.getString("name"));
-		user.setNewPrize(rs.getInt("new_prize"));
 		user.setUuid(rs.getString("uuid"));
+		user.setAlias(rs.getString("alias"));
 		return user;
 	}
 	

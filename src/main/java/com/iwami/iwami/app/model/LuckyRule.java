@@ -16,6 +16,8 @@ public class LuckyRule {
 	
 	private int prob;
 	
+	private int count;
+	
 	private Date lastmodTime;
 	
 	private long lastmodUserid;
@@ -81,5 +83,13 @@ public class LuckyRule {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

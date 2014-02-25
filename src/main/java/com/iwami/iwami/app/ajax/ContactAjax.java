@@ -25,19 +25,18 @@ public class ContactAjax {
 		
 		try{
 			Contact contact = contactBiz.getContact();
+			Map<String, Object> data = new HashMap<String, Object>();
 			if(contact != null){
-				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
-				result.put("phone1", contact.getPhone1());
-				result.put("email1", contact.getEmail1());
-				result.put("domain", contact.getDomain());
-				result.put("qq", contact.getQq());
-				result.put("qqgroup", contact.getQqgroup());
-				result.put("phone2", contact.getPhone2());
-				result.put("email2", contact.getEmail2());
-			} else{
-				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
+				data.put("phone1", contact.getPhone1());
+				data.put("email1", contact.getEmail1());
+				data.put("domain", contact.getDomain());
+				data.put("qq", contact.getQq());
+				data.put("qqgroup", contact.getQqgroup());
+				data.put("phone2", contact.getPhone2());
+				data.put("email2", contact.getEmail2());
 			}
-				
+			result.put("data", data);
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 		} catch(Throwable t){
 			if(logger.isErrorEnabled())
 				logger.error("Exception in contact", t);

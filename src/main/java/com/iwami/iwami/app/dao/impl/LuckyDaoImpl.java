@@ -2,6 +2,7 @@ package com.iwami.iwami.app.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -17,19 +18,20 @@ public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 
 	@Override
 	public List<LuckyRule> getLuckyRules() {
-		List<LuckyRule> result = getJdbcTemplate().query("select id, index_lev, gift, prob, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_LUCKY_RULE + " where isdel = 0", new RowMapper<LuckyRule>() {
+		List<LuckyRule> result = getJdbcTemplate().query("select id, index_lev, gift, prob, count, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_LUCKY_RULE + " where isdel = 0", new RowMapper<LuckyRule>() {
 
 			@Override
 			public LuckyRule mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
-				LuckyRule draw = new LuckyRule();
-				draw.setId(rs.getLong("id"));
-				draw.setIndexLevel(rs.getInt("index_lev"));
-				draw.setGift(rs.getString("gift"));
-				draw.setProb(rs.getInt("prob"));
-				draw.setLastmodTime(rs.getDate("lastmod_time"));
-				draw.setLastmodUserid(rs.getLong("lastmod_userid"));
-				return draw;
+				LuckyRule rule = new LuckyRule();
+				rule.setId(rs.getLong("id"));
+				rule.setIndexLevel(rs.getInt("index_lev"));
+				rule.setGift(rs.getString("gift"));
+				rule.setProb(rs.getInt("prob"));
+				rule.setCount(rs.getInt("count"));
+				rule.setLastmodTime(rs.getDate("lastmod_time"));
+				rule.setLastmodUserid(rs.getLong("lastmod_userid"));
+				return rule;
 			}
 		});
 		return result;
@@ -134,6 +136,11 @@ public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 	@Override
 	public int getLuckyCountByUserid(long userid) {
 		return getJdbcTemplate().queryForInt("select count(1) from " + SqlConstants.TABLE_LUCKY_HISTORY + " where userid = ? and isdel = 0", new Object[]{userid});
+	}
+
+	@Override
+	public int getLuckyDrawCount(long drawid, Date start, Date end) {
+		return getJdbcTemplate().queryForInt("select count(1) from " + SqlConstants.TABLE_LUCKY_HISTORY + " where draw_id = ? and lastmod_time between ? and ? and isdel = 0", new Object[]{drawid, start, end});
 	}
 
 }

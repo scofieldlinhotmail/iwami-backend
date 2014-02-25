@@ -16,6 +16,7 @@ import com.iwami.iwami.app.model.LuckyRule;
 import com.iwami.iwami.app.model.User;
 import com.iwami.iwami.app.service.LuckyService;
 import com.iwami.iwami.app.service.UserService;
+import com.iwami.iwami.app.util.IWamiUtils;
 
 public class LuckyBizImpl implements LuckyBiz {
 	
@@ -38,12 +39,12 @@ public class LuckyBizImpl implements LuckyBiz {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class, value="txManager")
-	public LuckyRule draw(User user, LuckyConfig config) throws LuckyExceedLimitException, NotEnoughPrizeException {
-		if(config.getCount() >= 0){
+	public LuckyHistory draw(User user, LuckyConfig config) throws LuckyExceedLimitException, NotEnoughPrizeException {
+		/*if(config.getCount() >= 0){
 			int count = luckyService.getLuckyCountByUserid(user.getId());
 			if(count >= config.getCount())
 				throw new LuckyExceedLimitException();
-		}
+		}*/
 		
 		List<LuckyRule> rules = luckyService.getLuckyRules();
 		if(rules == null || rules.size() <= 0)
@@ -51,7 +52,7 @@ public class LuckyBizImpl implements LuckyBiz {
 		Collections.sort(rules, new LuckyRuleComparator());
 		
 		LuckyRule frule = null;
-		int prob = new Random(System.currentTimeMillis()).nextInt(100);
+		int prob = new Random(System.currentTimeMillis()).nextInt(10000);
 		for(LuckyRule rule : rules){
 			prob = prob - rule.getProb();
 			if(prob < 0)
@@ -65,16 +66,17 @@ public class LuckyBizImpl implements LuckyBiz {
 			history.setUsername(user.getName());
 			history.setCellPhone(user.getCellPhone());
 			history.setDrawPrize(config.getPrize());
-			if(frule != null){
+			history.setDrawid(-1);
+			history.setDrawLevel(-1);
+			history.setGift("未中奖");
+			if(frule != null && luckyService.getLuckyDrawCount(frule.getId(), IWamiUtils.getTodayStart(), IWamiUtils.getTodayEnd()) < frule.getCount()){
 				history.setDrawid(frule.getId());
 				history.setGift(frule.getGift());
-			} else{
-				history.setDrawid(-1);
-				history.setGift("未中奖");
+				history.setDrawLevel(frule.getIndexLevel());
 			}
 			
 			if(luckyService.addLuckyHistory(history))
-				return frule;
+				return history;
 			else
 				throw new RuntimeException("insert luck history failed...");
 		} else

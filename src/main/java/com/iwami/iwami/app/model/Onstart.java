@@ -16,6 +16,8 @@ public class Onstart {
 	
 	private String gps;
 	
+	private String alias;
+	
 	private String version;
 	
 	private int type;
@@ -86,6 +88,14 @@ public class Onstart {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	@Override

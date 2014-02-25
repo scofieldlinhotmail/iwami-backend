@@ -71,6 +71,7 @@ public class OnstartAjax {
 								onstart.setUuid(uuid);
 								onstart.setType(type);
 								onstart.setGps(gps);
+								onstart.setAlias(StringUtils.trimToEmpty(params.get("alias")));
 								onstart.setVersion(version);
 								onstart.setAddTime(new Date(time));
 								

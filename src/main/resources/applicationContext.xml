@@ -44,7 +44,7 @@
 		<property name="apkBiz" ref="apkBiz" />
 	</bean>
 	<bean name="monitorAjax" class="com.iwami.iwami.app.ajax.MonitorAjax" />
-	<bean name="downloadAjax" class="com.iwami.iwami.app.ajax.ApkAjax">
+	<bean name="apkAjax" class="com.iwami.iwami.app.ajax.ApkAjax">
 		<property name="apkBiz" ref="apkBiz" />
 	</bean>
 	<bean name="contactAjax" class="com.iwami.iwami.app.ajax.ContactAjax">
@@ -62,6 +62,12 @@
 	</bean>
 	<bean name="wamiAjax" class="com.iwami.iwami.app.ajax.WamiAjax">
 		<property name="wamiBiz" ref="wamiBiz"></property>
+	</bean>
+	<bean name="strategyAjax" class="com.iwami.iwami.app.ajax.StrategyAjax">
+		<property name="strategyBiz" ref="strategyBiz"></property>
+	</bean>
+	<bean name="taskAjax" class="com.iwami.iwami.app.ajax.TaskAjax">
+		<property name="taskBiz" ref="taskBiz"></property>
 	</bean>
 	
 	<!-- biz -->
@@ -94,6 +100,12 @@
 	<bean name="wamiBiz" class="com.iwami.iwami.app.biz.impl.WamiBizImpl">
 		<property name="wamiService" ref="wamiService" />
 	</bean>
+	<bean name="strategyBiz" class="com.iwami.iwami.app.biz.impl.StrategyBizImpl">
+		<property name="strategyService" ref="strategyService" />
+	</bean>
+	<bean name="taskBiz" class="com.iwami.iwami.app.biz.impl.TaskBizImpl">
+		<property name="taskService" ref="taskService" />
+	</bean>
 	
 	<!-- service -->
 	<bean name="onstartService" class="com.iwami.iwami.app.service.impl.OnstartServiceImpl">
@@ -116,9 +128,18 @@
 	</bean>
 	<bean name="tipsService" class="com.iwami.iwami.app.service.impl.TipsServiceImpl">
 		<property name="tipsDao" ref="tipsDao" />
+		<property name="expireTime" ref="expireTime" />
 	</bean>
 	<bean name="wamiService" class="com.iwami.iwami.app.service.impl.WamiServiceImpl">
 		<property name="wamiDao" ref="wamiDao" />
+	</bean>
+	<bean name="strategyService" class="com.iwami.iwami.app.service.impl.StrategyServiceImpl">
+		<property name="strategyDao" ref="strategyDao" />
+		<property name="expireTime" ref="expireTime" />
+	</bean>
+	<bean name="taskService" class="com.iwami.iwami.app.service.impl.TaskServiceImpl">
+		<property name="taskDao" ref="taskDao" />
+		<property name="expireTime" ref="expireTime" />
 	</bean>
 	
 	<!-- common beans -->

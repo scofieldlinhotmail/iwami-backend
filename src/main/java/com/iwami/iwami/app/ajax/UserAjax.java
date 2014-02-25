@@ -46,9 +46,6 @@ public class UserAjax {
 				result.put("address", user.getAddress());
 				result.put("currentPrize", user.getCurrentPrize());
 				result.put("exchangePrize", user.getExchangePrize());
-				result.put("newPrize", user.getNewPrize());
-				result.put("contPrize", user.getContPrize());
-				result.put("commentPrize", user.getCommentPrize());
 				result.put("lastCellPhone1", user.getLastCellPhone1());
 				result.put("lastAlipayAccount：", user.getLastAlipayAccount());
 				result.put("lastBankAccount：", user.getLastBankAccount());
@@ -129,7 +126,7 @@ public class UserAjax {
 						}
 						
 						if(StringUtils.isNotBlank(code)){
-							User user = userBiz.register(uuid, name, cellPhone, code);
+							User user = userBiz.register(uuid, name, cellPhone, StringUtils.trimToEmpty(params.get("alias")), code);
 							if(user != null){
 								result.put("userid", user.getId());
 								result.put("username", user.getName());

@@ -1,5 +1,6 @@
 package com.iwami.iwami.app.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.iwami.iwami.app.constants.IWamiConstants;
@@ -51,6 +52,11 @@ public class LuckyServiceImpl implements LuckyService {
 		return luckyDao.addLuckyHistory(history);
 	}
 
+	@Override
+	public int getLuckyDrawCount(long drawid, Date start, Date end) {
+		return luckyDao.getLuckyDrawCount(drawid, start, end);
+	}
+
 	public LuckyDao getLuckyDao() {
 		return luckyDao;
 	}
@@ -66,5 +72,4 @@ public class LuckyServiceImpl implements LuckyService {
 	public void setExpireTime(long expireTime) {
 		this.expireTime = expireTime;
 	}
-
 }

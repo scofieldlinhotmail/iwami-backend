@@ -37,12 +37,12 @@ public class UserBizImpl implements UserBiz {
 		
 		if(cellPhone > 0){
 			String code = IWamiUtils.getRandInt(verifyCodeLength);
-			Code codeO = new Code();
-			codeO.setCellPhone(cellPhone);
-			codeO.setCode(code);
-			if(userService.addCode(codeO)){
+			Code _code = new Code();
+			_code.setCellPhone(cellPhone);
+			_code.setCode(code);
+			if(userService.addCode(_code)){
 				//TODO modify sms content
-				if(SMSUtils.sendLuosiMao("验证码为" + code + "，5分钟内有效，祝您选餐开心【iwami】", "" + cellPhone))
+				if(SMSUtils.sendLuosiMao("验证码为" + code + "，5分钟内有效【iwami】", "" + cellPhone))
 					result = true;
 				else
 					throw new RuntimeException("Error in sending code to cell phone.");
@@ -53,10 +53,10 @@ public class UserBizImpl implements UserBiz {
 	}
 
 	@Override
-	public User register(String uuid, String name, long cellPhone, String code) throws VerifyCodeMismatchException {
+	public User register(String uuid, String name, long cellPhone, String alias, String code) throws VerifyCodeMismatchException {
 		// TODO reset expire ms
-		Code codeO = userService.getCode(cellPhone, code, DateUtils.addMinutes(new Date(), -5));
-		if(codeO != null && codeO.getCellPhone() == cellPhone && StringUtils.equals(codeO.getCode(), code)){
+		Code _code = userService.getCode(cellPhone, code, DateUtils.addMinutes(new Date(), -5));
+		if(_code != null && _code.getCellPhone() == cellPhone && StringUtils.equals(_code.getCode(), code)){
 			User user = userService.getUserByCellPhone(cellPhone);
 			
 			if(user == null){
@@ -64,11 +64,13 @@ public class UserBizImpl implements UserBiz {
 				user.setCellPhone(cellPhone);
 				user.setName(name);
 				user.setUuid(uuid);
+				user.setAlias(alias);
 				userService.addUser4Register(user);
 			} else{
 				user.setCellPhone(cellPhone);
 				user.setName(name);
 				user.setUuid(uuid);
+				user.setAlias(alias);
 				userService.updateUser4Register(user);
 			}
 			

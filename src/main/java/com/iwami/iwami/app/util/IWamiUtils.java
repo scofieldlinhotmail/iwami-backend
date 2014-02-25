@@ -1,9 +1,12 @@
 package com.iwami.iwami.app.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 public class IWamiUtils {
 	
@@ -56,5 +59,13 @@ public class IWamiUtils {
 			}
 		}
 		return 0;
+	}
+
+	public static Date getTodayStart() {
+		return DateUtils.truncate(new Date(), Calendar.DATE);
+	}
+
+	public static Date getTodayEnd() {
+		return DateUtils.addMilliseconds(DateUtils.truncate(DateUtils.addDays(new Date(), 1), Calendar.DATE), -1);
 	}
 }

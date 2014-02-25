@@ -9,7 +9,7 @@ public interface UserBiz {
 
 	public boolean sendVerifyCode(long cellPhone);
 
-	public User register(String uuid, String name, long cellPhone, String code) throws VerifyCodeMismatchException;
+	public User register(String uuid, String name, long cellPhone, String alias, String code) throws VerifyCodeMismatchException;
 
 	public boolean modifyUserInfo4Register(User user);
 
