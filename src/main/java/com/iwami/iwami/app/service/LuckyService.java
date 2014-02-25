@@ -17,5 +17,5 @@ public interface LuckyService {
 
 	public boolean addLuckyHistory(LuckyHistory history);
 
-	public int getLuckyDrawCount(long drawid, Date start, Date end);
+	public int getLuckyDrawCount(long drawid, Date start);
 }

@@ -22,4 +22,6 @@ public interface UserService {
 	public boolean updateUser4Register(User user);
 
 	public boolean modifyUserInfo4Register(User user);
+
+	public void addUserCurrentPrize(long userid, int prize);
 }

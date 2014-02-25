@@ -8,7 +8,21 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Task {
 
-	private int id;
+	public static final int STATUS_READY = -1;
+
+	public static final int STATUS_START = 0;
+
+	public static final int STATUS_DOWNLOADING = 1;
+
+	public static final int STATUS_DOWNLOADED = 2;
+
+	public static final int STATUS_INSTALLING = 3;
+
+	public static final int STATUS_INSTALLED = 4;
+
+	public static final int STATUS_FINISH = 5;
+
+	private long id;
 	
 	private String name;
 	
@@ -50,15 +64,17 @@ public class Task {
 	
 	private String iconBig;
 	
+	private int status;
+	
 	private Date lastModTime;
 	
 	private long lastModUserid;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -251,6 +267,14 @@ public class Task {
 
 	public void setAvailable(int available) {
 		this.available = available;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 }

@@ -9,6 +9,12 @@ public interface TaskDao {
 
 	public List<Task> getAllTasks();
 
-	public TreasureConfig getTreasureConfig(); 
+	public TreasureConfig getTreasureConfig();
+
+	public Task getTaskById(long taskid);
+
+	public void incrTaskCurrentPrize(long taskid);
+
+	public List<Task> getTasksByIds(List<Long> taskIds); 
 	
 }

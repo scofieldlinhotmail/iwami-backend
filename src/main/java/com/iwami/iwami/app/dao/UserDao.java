@@ -25,4 +25,6 @@ public interface UserDao {
 
 	public boolean modifyUserInfo4Register(User user);
 
+	public void addUserCurrentPrize(long userid, int prize);
+
 }

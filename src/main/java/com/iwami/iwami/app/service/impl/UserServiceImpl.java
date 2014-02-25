@@ -61,6 +61,11 @@ public class UserServiceImpl implements UserService {
 		return userDao.modifyUserInfo4Register(user);
 	}
 
+	@Override
+	public void addUserCurrentPrize(long userid, int prize) {
+		userDao.addUserCurrentPrize(userid, prize);
+	}
+
 	public UserDao getUserDao() {
 		return userDao;
 	}

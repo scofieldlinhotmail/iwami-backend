@@ -54,6 +54,21 @@ public class TaskServiceImpl implements TaskService {
 		return config;
 	}
 
+	@Override
+	public Task getTaskById(long taskid) {
+		return taskDao.getTaskById(taskid);
+	}
+
+	@Override
+	public List<Task> getTasksByIds(List<Long> taskIds) {
+		return taskDao.getTasksByIds(taskIds);
+	}
+
+	@Override
+	public void incrTaskCurrentPrize(long taskid) {
+		taskDao.incrTaskCurrentPrize(taskid);
+	}
+
 	public TaskDao getTaskDao() {
 		return taskDao;
 	}

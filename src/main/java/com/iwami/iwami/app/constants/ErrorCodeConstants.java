@@ -59,6 +59,11 @@ public class ErrorCodeConstants {
 	public static final int STATUS_ERROR_RATE_STRATEGY_NOT_EXISTS = 100071;
 	public static final int STATUS_ERROR_RATE_STRATEGY_UUID = 100072;
 	public static final int STATUS_ERROR_RATE_STRATEGY_DUPLICATE = 100073;
+
+	public static final int STATUS_WAMI_TASKID = 100041;
+	public static final int STATUS_WAMI_TYPE = 100042;
+	public static final int STATUS_WAMI_USERID = 100043;
+	public static final int STATUS_WAMI_TIME = 100044;
 	
 	public static Map<Integer, String> ERROR_MSG_MAP = new HashMap<Integer, String>();
 	
@@ -96,5 +101,10 @@ public class ErrorCodeConstants {
 		ERROR_MSG_MAP.put(STATUS_ERROR_RATE_STRATEGY_NOT_EXISTS, "攻略不存在");
 		ERROR_MSG_MAP.put(STATUS_ERROR_RATE_STRATEGY_UUID, "uuid不能为空");
 		ERROR_MSG_MAP.put(STATUS_ERROR_RATE_STRATEGY_DUPLICATE, "重复点赞");
+
+		ERROR_MSG_MAP.put(STATUS_WAMI_USERID, "userid不存在");
+		ERROR_MSG_MAP.put(STATUS_WAMI_TASKID, "taskid不存在");
+		ERROR_MSG_MAP.put(STATUS_WAMI_TYPE, "type不对");
+		ERROR_MSG_MAP.put(STATUS_WAMI_TIME, "上传时间不能为空");
 	}
 }

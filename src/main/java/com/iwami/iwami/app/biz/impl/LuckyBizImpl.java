@@ -69,7 +69,7 @@ public class LuckyBizImpl implements LuckyBiz {
 			history.setDrawid(-1);
 			history.setDrawLevel(-1);
 			history.setGift("未中奖");
-			if(frule != null && luckyService.getLuckyDrawCount(frule.getId(), IWamiUtils.getTodayStart(), IWamiUtils.getTodayEnd()) < frule.getCount()){
+			if(frule != null && luckyService.getLuckyDrawCount(frule.getId(), IWamiUtils.getTodayStart()) < frule.getCount()){
 				history.setDrawid(frule.getId());
 				history.setGift(frule.getGift());
 				history.setDrawLevel(frule.getIndexLevel());

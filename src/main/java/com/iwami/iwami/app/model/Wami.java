@@ -1,5 +1,7 @@
 package com.iwami.iwami.app.model;
 
+import java.util.Date;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -7,14 +9,22 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Wami {
 
 	private long id;
-	private int userid;
+	
+	private long userid;
+	
 	private long taskId;
+	
 	private int type;
+	
 	private int prize;
-	private long addTime;
-	private long lastmodTime;
-	private int lastmodUserid;
-	private int isdel;
+	
+	private String channel;
+	
+	private Date addTime;
+	
+	private Date lastmodTime;
+	
+	private long lastmodUserid;
 
 	public long getId() {
 		return id;
@@ -24,11 +34,11 @@ public class Wami {
 		this.id = id;
 	}
 
-	public int getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 
-	public void setUserid(int userid) {
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
 
@@ -56,36 +66,36 @@ public class Wami {
 		this.prize = prize;
 	}
 
-	public long getAddTime() {
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public Date getAddTime() {
 		return addTime;
 	}
 
-	public void setAddTime(long addTime) {
+	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
 
-	public long getLastmodTime() {
+	public Date getLastmodTime() {
 		return lastmodTime;
 	}
 
-	public void setLastmodTime(long lastmodTime) {
+	public void setLastmodTime(Date lastmodTime) {
 		this.lastmodTime = lastmodTime;
 	}
 
-	public int getLastmodUserid() {
+	public long getLastmodUserid() {
 		return lastmodUserid;
 	}
 
-	public void setLastmodUserid(int lastmodUserid) {
+	public void setLastmodUserid(long lastmodUserid) {
 		this.lastmodUserid = lastmodUserid;
-	}
-
-	public int getIsdel() {
-		return isdel;
-	}
-
-	public void setIsdel(int isdel) {
-		this.isdel = isdel;
 	}
 
 	@Override

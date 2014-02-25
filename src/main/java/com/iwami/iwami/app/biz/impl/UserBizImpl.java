@@ -54,7 +54,7 @@ public class UserBizImpl implements UserBiz {
 
 	@Override
 	public User register(String uuid, String name, long cellPhone, String alias, String code) throws VerifyCodeMismatchException {
-		// TODO reset expire ms
+		// reset expire ms
 		Code _code = userService.getCode(cellPhone, code, DateUtils.addMinutes(new Date(), -5));
 		if(_code != null && _code.getCellPhone() == cellPhone && StringUtils.equals(_code.getCode(), code)){
 			User user = userService.getUserByCellPhone(cellPhone);

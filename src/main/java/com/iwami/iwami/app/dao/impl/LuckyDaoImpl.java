@@ -139,8 +139,8 @@ public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 	}
 
 	@Override
-	public int getLuckyDrawCount(long drawid, Date start, Date end) {
-		return getJdbcTemplate().queryForInt("select count(1) from " + SqlConstants.TABLE_LUCKY_HISTORY + " where draw_id = ? and lastmod_time between ? and ? and isdel = 0", new Object[]{drawid, start, end});
+	public int getLuckyDrawCount(long drawid, Date start) {
+		return getJdbcTemplate().queryForInt("select count(1) from " + SqlConstants.TABLE_LUCKY_HISTORY + " where draw_id = ? and lastmod_time > ? and isdel = 0", new Object[]{drawid, start});
 	}
 
 }

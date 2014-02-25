@@ -64,8 +64,4 @@ public class IWamiUtils {
 	public static Date getTodayStart() {
 		return DateUtils.truncate(new Date(), Calendar.DATE);
 	}
-
-	public static Date getTodayEnd() {
-		return DateUtils.addMilliseconds(DateUtils.truncate(DateUtils.addDays(new Date(), 1), Calendar.DATE), -1);
-	}
 }

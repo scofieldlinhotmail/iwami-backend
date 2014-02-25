@@ -53,8 +53,8 @@ public class LuckyServiceImpl implements LuckyService {
 	}
 
 	@Override
-	public int getLuckyDrawCount(long drawid, Date start, Date end) {
-		return luckyDao.getLuckyDrawCount(drawid, start, end);
+	public int getLuckyDrawCount(long drawid, Date start) {
+		return luckyDao.getLuckyDrawCount(drawid, start);
 	}
 
 	public LuckyDao getLuckyDao() {

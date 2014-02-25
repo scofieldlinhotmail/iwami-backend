@@ -28,10 +28,7 @@ public class TaskAjax {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
-			long userid = -1;
-			if(params.containsKey("userid"))
-				userid = NumberUtils.toLong(params.get("userid"), -1);
-			List<List<Task>> tasks = taskBiz.getWamiTasks(userid);
+			List<List<Task>> tasks = taskBiz.getWamiTasks(NumberUtils.toLong(params.get("userid"), -1));
 			result.put("new", parseTasks(tasks.get(0)));
 			result.put("ongoing", parseTasks(tasks.get(1)));
 			result.put("done", parseTasks(tasks.get(2)));
@@ -62,7 +59,7 @@ public class TaskAjax {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
-			List<Task> tasks = taskBiz.getTopTasks();
+			List<Task> tasks = taskBiz.getTopTasks(NumberUtils.toLong(params.get("userid"), -1));
 			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 			result.put("data", parseTasks(tasks));
 			result.put("time", getLatestTime(tasks));

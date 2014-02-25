@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.nuxeo.common.utils.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
@@ -31,6 +32,27 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 		else
 			return null;
 	}
+
+	@Override
+	public Task getTaskById(long taskid) {
+		List<Task> tasks = getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id = ?", 
+				new Object[]{taskid}, new TaskRowMapper());
+		
+		if(tasks != null && tasks.size() > 0)
+			return tasks.get(0);
+		else
+			return null;
+	}
+
+	@Override
+	public List<Task> getTasksByIds(List<Long> taskIds) {
+		return getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id in (" + StringUtils.join(taskIds.toArray(), ",") + ")", new TaskRowMapper());
+	}
+
+	@Override
+	public void incrTaskCurrentPrize(long taskid) {
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_TASK + " set current_prize = current_prize + prize where id = ?", new Object[]{taskid});
+	}
 }
 
 class TreasureConfigRowMapper implements RowMapper<TreasureConfig>{
@@ -55,7 +77,7 @@ class TaskRowMapper implements RowMapper<Task>{
 	@Override
 	public Task mapRow(ResultSet rs, int index) throws SQLException {
 		Task task = new Task();
-		task.setId(rs.getInt("id"));
+		task.setId(rs.getLong("id"));
 		task.setName(rs.getString("name"));
 		task.setRank(rs.getInt("rank"));
 		task.setSize(rs.getDouble("size"));

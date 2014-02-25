@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -15,19 +16,24 @@ import com.iwami.iwami.app.comparator.TaskOngoingComparator;
 import com.iwami.iwami.app.comparator.TaskRankComparator;
 import com.iwami.iwami.app.model.Task;
 import com.iwami.iwami.app.model.TreasureConfig;
+import com.iwami.iwami.app.model.Wami;
 import com.iwami.iwami.app.service.TaskService;
+import com.iwami.iwami.app.service.WamiService;
+import com.iwami.iwami.app.util.IWamiUtils;
 
 public class TaskBizImpl implements TaskBiz {
 	
 	private TaskService taskService;
+	
+	private WamiService wamiService;
 
 	@Override
-	public List<Task> getTopTasks() {
-		List<Task> tasks = getDoneTasks();
+	public List<Task> getTopTasks(long userid) {
+		List<Task> tasks = new ArrayList<Task>();
 		
 		List<Task> tmp = taskService.getAllAvailableTasks();
 		if(tmp != null && tmp.size() > 0){
-			List<Task> ttt = getDoneTasks();
+			List<Task> ttt = new ArrayList<Task>();
 			for(Task task : tmp)
 				if((task.getType() & 8) == 8){
 					ttt.add(task);
@@ -35,9 +41,24 @@ public class TaskBizImpl implements TaskBiz {
 					
 			Collections.sort(ttt, new TaskRankComparator());
 			
+			List<Long> ids = new ArrayList<Long>();
 			for(int i = 0; i < ttt.size() && i < 3; i ++){
-				ttt.get(i).setRank(i);
-				tasks.add(ttt.get(i));
+				Task _task = new Task();
+				BeanUtils.copyProperties(ttt.get(i), _task);
+				_task.setRank(i);
+				tasks.add(_task);
+				ids.add(_task.getId());
+			}
+			
+			if(ids != null && ids.size() > 0 && userid > 0){
+				Map<Long, Wami> wamis = wamiService.getLatestWamis(userid, ids);
+				
+				if(wamis != null && wamis.size() > 0)
+					for(Task _task : tasks)
+						if(wamis.containsKey(_task.getId()))
+							_task.setStatus(wamis.get(_task.getId()).getType());
+						else
+							_task.setStatus(Task.STATUS_READY);
 			}
 		}
 		
@@ -58,13 +79,13 @@ public class TaskBizImpl implements TaskBiz {
 			List<Task> tmpnew = getNewTasks();
 			
 			// ongoing
-			List<Task> tmpongoing = getOngoingTasks();
+			List<Task> tmpongoing = getOngoingTasks(userid);
 			
 			// done
-			donetasks = getDoneTasks();
+			donetasks = getDoneTasks(userid);
 
 			// filter ongoing tasks
-			Set<Integer> filteredIds = new HashSet<Integer>();
+			Set<Long> filteredIds = new HashSet<Long>();
 			
 			if(donetasks != null && donetasks.size() > 0)
 				for(Task task : donetasks)
@@ -114,16 +135,20 @@ public class TaskBizImpl implements TaskBiz {
 		return tasks;
 	}
 
-	private List<Task> getDoneTasks() {
-		//TODO
-		List<Task> donetasks = new ArrayList<Task>();
-		return donetasks;
+	private List<Task> getDoneTasks(long userid) {
+		List<Long> taskIds = wamiService.getDoneTaskIds(userid, IWamiUtils.getTodayStart());
+		if(taskIds != null && taskIds.size() > 0)
+			return taskService.getTasksByIds(taskIds);
+		else
+			return null;
 	}
 
-	private List<Task> getOngoingTasks() {
-		//TODO
-		List<Task> ongoingtasks = new ArrayList<Task>();
-		return ongoingtasks;
+	private List<Task> getOngoingTasks(long userid) {
+		List<Long> taskIds = wamiService.getOngoingWami(userid);
+		if(taskIds != null && taskIds.size() > 0)
+			return taskService.getTasksByIds(taskIds);
+		else
+			return null;
 	}
 
 	private List<Task> getNewTasks() {
@@ -145,12 +170,25 @@ public class TaskBizImpl implements TaskBiz {
 		return taskService.getTreasureConfig();
 	}
 
+	@Override
+	public Task getTaskById(long taskid) {
+		return taskService.getTaskById(taskid);
+	}
+
 	public TaskService getTaskService() {
 		return taskService;
 	}
 
 	public void setTaskService(TaskService taskService) {
 		this.taskService = taskService;
+	}
+
+	public WamiService getWamiService() {
+		return wamiService;
+	}
+
+	public void setWamiService(WamiService wamiService) {
+		this.wamiService = wamiService;
 	}
 
 }

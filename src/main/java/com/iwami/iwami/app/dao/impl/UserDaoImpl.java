@@ -127,6 +127,11 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 			return null;
 	}
 
+	@Override
+	public void addUserCurrentPrize(long userid, int prize) {
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize + ? where id = ?", new Object[]{prize, userid});
+	}
+
 }
 
 class UserRowMapper implements RowMapper<User>{

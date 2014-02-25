@@ -27,5 +27,5 @@ public interface LuckyDao {
 	
 	public int getLuckyCountByUserid(long userid);
 
-	public int getLuckyDrawCount(long drawid, Date start, Date end);
+	public int getLuckyDrawCount(long drawid, Date start);
 }
