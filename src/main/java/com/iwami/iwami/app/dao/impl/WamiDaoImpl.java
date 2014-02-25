@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.iwami.iwami.app.constants.SqlConstants;
 import com.iwami.iwami.app.dao.WamiDao;
+import com.iwami.iwami.app.model.Task;
 import com.iwami.iwami.app.model.Wami;
 
 public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
@@ -39,7 +40,7 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 	public Map<Long, Wami> getLatestWami(long userid, List<Long> taskids) {
 		Map<Long, Wami> wamis = new HashMap<Long, Wami>();
 		
-		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from (select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and task_id in (" + StringUtils.join(taskids.toArray(), ",") + ") order by lastmod_time, id desc) tmp group by userid, task_id", 
+		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from (select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and task_id in (" + StringUtils.join(taskids.toArray(), ",") + ") order by lastmod_time, id desc) tmp group by task_id", 
 				new Object[]{0, userid}, new WamiRowMapper());
 		if(tmp != null && tmp.size() > 0)
 			for(Wami wami : tmp)
@@ -50,14 +51,23 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 
 	@Override
 	public List<Long> getDoneTaskIds(long userid, Date start) {
-		// TODO Auto-generated method stub
-		return null;
+		return getJdbcTemplate().query("select task_id from " + SqlConstants.TABLE_WAMI + " where userid = ? and type = ? and lastmod_time > ?", new Object[]{userid, Task.STATUS_FINISH, start}, new RowMapper<Long>(){
+			@Override
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getLong("task_id");
+			}
+		});
 	}
 
 	@Override
 	public List<Long> getOngoingWami(long userid) {
-		// TODO Auto-generated method stub
-		return null;
+		return getJdbcTemplate().query("select task_id from (select task_id, type from (select task_id, type from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? order by lastmod_time, id desc) tmp group by task_id) tmp2 where type <> ?", 
+				new Object[]{userid, Task.STATUS_FINISH}, new RowMapper<Long>(){
+			@Override
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getLong("task_id");
+			}
+		});
 	}
 
 }
