@@ -21,7 +21,7 @@ public class TipsAjax {
 	private TipsBiz tipsBiz;
 
 	@AjaxMethod(path = "tips.ajax")
-	public Map<Object, Object> getContent(Map<String, String> params) {
+	public Map<Object, Object> getTips(Map<String, String> params) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		try {
 			int type = -1;

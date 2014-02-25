@@ -3,7 +3,6 @@ package com.iwami.iwami.app.ajax;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,13 +26,8 @@ public class ApkAjax {
 		
 		try{
 			String url = apkBiz.getApkURL();
-			if(StringUtils.isNotBlank(url)){
-				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
-				result.put("url", url);
-			} else{
-				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
-			}
-				
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+			result.put("url", url);
 		} catch(Throwable t){
 			if(logger.isErrorEnabled())
 				logger.error("Exception in download", t);

@@ -19,7 +19,7 @@ public class OnstartDaoImpl extends JdbcDaoSupport implements OnstartDao{
 	public boolean logOnstart(Onstart onstart) {
 		boolean result = false;
 		if(onstart != null){
-			int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_ONSTART + "(`userid`,`cell_phone`,`uuid`,`type`,`gps`,`alias`,`version`,`add_time`,`lastmod_time`) values(?,?,?,?,?,?,?,now())", 
+			int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_ONSTART + "(`userid`,`cell_phone`,`uuid`,`type`,`gps`,`alias`,`version`,`add_time`,`lastmod_time`) values(?,?,?,?,?,?,?,?,now())", 
 					new Object[]{onstart.getUserid(), onstart.getCellPhone(), onstart.getUuid(), onstart.getType(), onstart.getGps(),onstart.getAlias(), onstart.getVersion(), onstart.getAddTime()});
 			if(count > 0)
 				result = true;

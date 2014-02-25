@@ -12,7 +12,7 @@ import com.iwami.iwami.app.constants.ErrorCodeConstants;
 public class MonitorAjax {
 	
 	@AjaxMethod(path = "monitor.ajax")
-	public Map<Object, Object> onstart(Map<String, String> params) {
+	public Map<Object, Object> monitor(Map<String, String> params) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 		return result;

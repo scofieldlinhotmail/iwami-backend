@@ -62,7 +62,8 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public boolean addUserInfo4Register(User user) {
-		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_USERINFO + "(userid, name, uuid, alias, cell_phone, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, now(), now(), ?, 0)", new Object[]{user.getId(), user.getName(), user.getUuid(), user.getAlias(), user.getCellPhone(), user.getId()});
+		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_USERINFO + "(userid, name, uuid, alias, cell_phone, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, now(), now(), ?, 0)", 
+				new Object[]{user.getId(), user.getName(), user.getUuid(), user.getAlias(), user.getCellPhone(), user.getId()});
 		if(count > 0)
 			return true;
 		else

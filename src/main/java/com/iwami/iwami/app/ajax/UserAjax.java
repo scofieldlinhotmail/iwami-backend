@@ -47,8 +47,8 @@ public class UserAjax {
 				result.put("currentPrize", user.getCurrentPrize());
 				result.put("exchangePrize", user.getExchangePrize());
 				result.put("lastCellPhone1", user.getLastCellPhone1());
-				result.put("lastAlipayAccount：", user.getLastAlipayAccount());
-				result.put("lastBankAccount：", user.getLastBankAccount());
+				result.put("lastAlipayAccount", user.getLastAlipayAccount());
+				result.put("lastBankAccount", user.getLastBankAccount());
 				result.put("lastBankName", user.getLastBankName());
 				result.put("lastAddress", user.getLastAddres());
 				result.put("lastCellPhone2", user.getLastCellPhone2());

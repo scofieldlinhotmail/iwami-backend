@@ -17,14 +17,14 @@ public class ApkDaoImpl extends JdbcDaoSupport implements ApkDao {
 
 	@Override
 	public Apk getApk() {
-		List<Apk> apks = getJdbcTemplate().query("select id, version, url, force, desc, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_APK + " where isdel = 0 order by lastmod_time desc limit 1", new RowMapper<Apk>() {
+		List<Apk> apks = getJdbcTemplate().query("select id, version, url, `force`, `desc`, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_APK + " where isdel = 0 order by lastmod_time desc limit 1", new RowMapper<Apk>() {
 			@Override
 			public Apk mapRow(ResultSet rs, int index) throws SQLException {
 				Apk apk = new Apk();
 				apk.setId(rs.getLong("id"));
 				apk.setVersion(rs.getString("version"));
 				apk.setUrl(rs.getString("url"));
-				apk.setForce(rs.getInt(rs.getInt("force")));
+				apk.setForce(rs.getInt("force"));
 				apk.setDesc(rs.getString("desc"));
 				Timestamp ts = rs.getTimestamp("lastmod_time");
 				if(ts != null)
@@ -51,7 +51,8 @@ public class ApkDaoImpl extends JdbcDaoSupport implements ApkDao {
 
 	@Override
 	public boolean addApk(Apk apk) {
-		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_APK + "(version,address, lastmod_time,lastmod_userid,isdel) values(?,?, now(), ?, 0)", new Object[]{apk.getVersion(), apk.getUrl(), apk.getLastmodUserid()}); 
+		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_APK + "(version, url, `force`, `desc`, lastmod_time, lastmod_userid, isdel) values(?,?,?,?, now(), ?, 0)", 
+				new Object[]{apk.getVersion(), apk.getUrl(), apk.getForce(), apk.getDesc(), apk.getLastmodUserid()}); 
 		if(count > 0)
 			return true;
 		else

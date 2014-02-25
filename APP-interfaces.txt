@@ -1,0 +1,813 @@
+以下接口全部需要在头加上：域名：port/client/
+大小写敏感
+
+
+1.服务器心跳接口
+	接口名字：monitor.ajax
+	输入参数：无
+	输出参数：status：0 
+
+
+	后端逻辑: 简单的return 0 
+	
+	http://localhost:8080/iwami/client/luck/monitor.ajax
+
+2.app上传启动信息
+	接口名字：onstart.ajax
+	输入参数：userid: int类型 用户id（如果用户id为空则传-1）
+			  cellPhone: int类型  手机号(为空则传-1)
+			  uuid: String字符串  设备唯一ID（小于50个字符）
+			  gps: String字符串  用户gps位置（小于50个字符）
+				alias: String android jpush推送id
+			  version：String 客户端版本信息
+			  type: int类型  启动类型（0手工启动,1新抢米任务推送,2任务完成，3本周小结，4本月小结，5运营消息，6赠送米粒，7确认发货）
+			  time: long类型  客户端上传时间（单位：毫秒）
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息		
+			   data: {
+			   		version: String 当前版本信息
+			   		update: 0/1 (否是)是新版本
+			   		force: 0/1 (否是)强制升级
+			   		desc: String 升级特性
+			   		url: String apk当前版本下载地址
+			   }
+
+
+	后端逻辑: 对应数据库表：onstart
+			  time存储到数据库的add_time属性，数据库lasdmod_time存储当前数据库时间
+			  
+  e.g. http://localhost:8080/iwami/client/onstart.ajax?userid=-1&cellPhone=18611007601&time=1390281117442&type=0&uuid=1211212121
+
+3、挖米信息接口
+	接口名字：tips.ajax
+	输入参数：type: int 话术类型：0挖米广告词,1没有符合要求的任务提示，2没有礼品提示
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息	
+			   data: String 话术内容
+
+4. 获取最新apk信息
+	接口名字：checkupdate.ajax
+	输入参数：version：String 客户端版本信息
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息		
+			   data: {
+			   		version: String 当前版本信息
+			   		force: 0/1 是否强制升级
+			   		url: String apk当前版本下载地址
+			   		desc：String 新增特性
+			   }
+	
+	备注：data有值代表需要升级，否则为最新版本不需要升级
+
+
+5、游戏金榜接口
+	接口名字：top.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: [ 
+			   	 {
+			   	 	id: int类型  金榜任务id 
+			   	 	name: String类型  app名字
+			   	 	rank: int类型   顺序
+			   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+			   	 	prize: int  米粒数
+			   	 	available: int  是否抢光: 0未抢光，1抢光
+			   	 	background: int 是否后台运行: 0不需要,1需要
+			   	 	register: int 是否需要注册: 0不需要,1需要
+			   	 	time: int 运行时间（单位：秒）
+			   	 	star: int 星级数
+			   	 	reputation：int 好评数
+			   	 	iconSmall: String Icon小图
+						iconBig: String Icon大图
+
+			   	 },
+			   	  ......
+			   	 {
+			   	 	id: int类型  金榜任务id 
+			   	 	name: String类型  app名字
+			   	 	rank: int类型   顺序
+			   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+			   	 	prize: int  米粒数
+			   	 	available: int  是否抢光: 0未抢光，1抢光
+			   	 	background: int 是否后台运行: 0不需要,1需要
+			   	 	register: int 是否需要注册: 0不需要,1需要
+			   	 	time: int 运行时间（单位：秒）
+			   	 	star: int 星级数
+			   	 	reputation：int 好评数
+			   	 	iconSmall: String Icon小图
+						iconBig: String Icon大图
+
+			   	 }
+			   ] ,
+			   time: long  金榜最新更新时间(单位：毫秒)
+
+	后端逻辑: task表取出type为金榜任务
+			  rank需要按照数据库的顺序重新标记
+			  time为data对象在task表中lastmod_time属性的最大值
+			  当前时间小于start_time，在结果中不返回前端
+			  当end_time不为空的时，当前时间大于end_time也不返回前端
+			  当max_prize大于0时，如max_prize大于current_prize时available为未抢光，max_prize小于等于current_prize时available为抢光
+
+
+6、挖米状态上传接口
+	接口名字：wami.ajax
+	输入参数：userid:  int  用户ID
+			  taskid:  int  任务ID
+			  type:	int  挖米类型: 0下载开始，1下载完成，2安装完成，3启动运行，4关闭/任务完成
+			  time:	long  客户端上传时间（单位：毫秒）
+			  channel：String 渠道值，线上可以为空（服务端固定值）
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100041: taskid不存在
+			  	100042：type不对
+			  	100043：userid不存在
+			  	100044:	time不能为空
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息	
+	后端逻辑: wami表的prize从task表对应taskid获取prize
+			  验证userid合法性（是否存在）
+			  taskid验证
+			  type=4需要更新task的current_prize和user的current_prize,更新user表current_prize
+			  需要使用事务来操作
+
+
+7、攻略列表接口
+	接口名字：strategy/list.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: {
+			   		images[
+			   			{
+			   				id: int 焦点图id
+			   				rank: int 顺序
+			   				url: String 焦点图url
+			   			},
+			   			......
+			   			{}
+			   		],
+			   		list: [
+			   			{
+			   				id: int 攻略id
+			   				name: String 攻略名字
+			   				subname: String 子标题
+			   				intr: String 简介
+			   				rank: int 排序
+			   				iconSmall: Stirng icon小图
+			   				iconBig: Stirng icon大图
+
+			   			},
+			   			......
+			   			{}
+			   		]
+
+
+			   }	
+
+
+8、攻略详情接口
+	接口名字：strategy/detail.ajax
+	输入参数：id：int 攻略id
+			  start: int 起始攻略数从0开始
+			  step: int 步长
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100061: 攻略id不存在
+			  	100062：start大于等于0
+			  	100063：step必须大于0 
+			  	100064：start大于评论总数
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息	
+			   data: {
+			   		skim: int 浏览数(当start=0才返回)
+			   		rate: int 好评数（当start=0才返回)
+			   		strategy: [
+			   			{
+			   				id: int 攻略内容id
+			   				rank: int 顺序
+			   				title: Srting 关数/小标题
+			   				content: String 具体评论内容
+			   				url：Stirng 评论图
+			   			},
+			   			......
+			   			{}
+			   		]
+			   }
+	后端逻辑: 当start=0时，需要更新strategy_rate表(表中的skim+1)
+
+
+9、点赞接口
+	接口名字：strategy/rate.ajax
+	输入参数：id: int 攻略id
+			  uuid: String字符串  设备唯一ID（小于50个字符） 
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100071: 攻略id不存在
+			  	100072：uuid为空
+			  	100073：重复点赞 
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息	
+	后端逻辑: 插入rate_info表，如捕获到unique异常返回100073
+			  返回正常则更新rate_info表（rate_info表skim+1），需要添加事务
+
+
+
+10、米粒任务接口
+	接口名字：wami/tasks.ajax
+	输入参数：userid:  int  用户ID
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   new: [  最新任务
+			   		{
+			   			id: int 任务id
+			   			name: String app名字
+			   			rank: int 顺序
+				   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+				   	 	prize: int  米粒数
+				   	 	type: int 任务类型: 0普通任务，1宝箱任务
+				   	 	available: int  是否抢光: 0未抢光，1抢光
+				   	 	background: int 是否后台运行: 0不需要,1需要
+				   	 	register: int 是否需要注册: 0不需要,
+				   	 	time: int 运行时间（单位：秒）
+				   	 	iconGray: String Icon灰图
+				   	 	iconSmall: String Icon小图
+							iconBig: String Icon大图
+							lastmodtime: long 修改时间
+
+			   		},
+			   		......
+			   		{}
+
+			   ]
+			   ongoing: [ 进行中的任务，按照“已经下载完等待执行-正在下载中-正在执行中”三个分类进行排序，每一分类下按照用户开始执行任务的时间进行倒序排序
+			   		{
+			   			id: int 任务id
+			   			name: String app名字
+			   			rank: int 顺序
+				   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+				   	 	prize: int  米粒数
+				   	 	type: int 任务类型: 0普通任务，1宝箱任务
+				   	 	available: int  是否抢光: 0未抢光，1抢光
+				   	 	background: int 是否后台运行: 0不需要,1需要
+				   	 	register: int 是否需要注册: 0不需要,
+				   	 	time: int 运行时间（单位：秒）
+				   	 	iconGray: String Icon灰图
+				   	 	iconSmall: String Icon小图
+							iconBig: String Icon大图
+							lastmodtime: long 修改时间
+
+			   		},
+			   		......
+			   		{}
+
+			   ]
+			   done： [ 今日完成的任务 - 任务的完成时间排序，新完成的任务排在上方
+			   		{
+			   			id: int 任务id
+			   			name: String app名字
+			   			rank: int 顺序
+				   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+				   	 	prize: int  米粒数
+				   	 	type: int 任务类型: 0普通任务，1宝箱任务
+				   	 	available: int  是否抢光: 0未抢光，1抢光
+				   	 	background: int 是否后台运行: 0不需要,1需要
+				   	 	register: int 是否需要注册: 0不需要,
+				   	 	time: int 运行时间（单位：秒）
+				   	 	iconGray: String Icon灰图
+				   	 	iconSmall: String Icon小图
+							iconBig: String Icon大图
+							lastmodtime: long 修改时间
+
+			   		},
+			   		......
+			   		{}
+
+			   ]
+			   days：int N天连续M次进入任务列表时所有任务均为“已抢光”任务时，触发红包条件
+			   count：int N天连续M次进入任务列表时所有任务均为“已抢光”任务时，触发红包条件
+			   
+	后端逻辑: task表取出type为普通任务
+			  当前时间小于start_time，在结果中不返回前端
+			  当end_time不为空的时，当前时间大于end_time也不返回前端
+			  当max_prize大于0时，如max_prize大于current_prize时available为未抢光，max_prize小于等于current_prize时available为抢光
+			  排序：所有“可执行”任务排在所有“已抢光”任务上方，任务开始时间最近的任务排在上方
+			  
+11、米粒宝箱接口
+	接口名字：wami/treasure.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: [
+			   		{
+			   			id: int 任务id
+			   			name: String app名字
+			   			rank: int 顺序
+				   	 	size: double  app大小（单位：KB）
+			   	 	intr: String  任务简介
+			   	 	appintr: String  app简介
+				   	 	prize: int  米粒数
+				   	 	type: int 任务类型: 0普通任务，1宝箱任务
+				   	 	available: int  是否抢光: 0未抢光，1抢光
+				   	 	background: int 是否后台运行: 0不需要,1需要
+				   	 	register: int 是否需要注册: 0不需要,
+				   	 	time: int 运行时间（单位：秒）
+				   	 	iconGray: String Icon灰图
+				   	 	iconSmall: String Icon小图
+							iconBig: String Icon大图
+							lastmodtime: long 修改时间
+
+			   		},
+			   		......
+			   		{}
+
+			   ]
+	后端逻辑: task表取出type为宝箱任务
+			  当前时间小于start_time，在结果中不返回前端
+			  当end_time不为空的时，当前时间大于end_time也不返回前端
+			  当max_prize大于0时，如max_prize大于current_prize时available为未抢光，max_prize小于等于current_prize时available为抢光且不返回前端
+			  只返回10条
+
+
+
+12、礼品列表接口
+ 	接口名字：present/list.ajax
+	输入参数：userid:  int  用户ID
+				start: int 起始攻略数从0开始
+			  step: int 步长
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100131: start必须大于等于0
+			  	100132: step必须大于0
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: [
+			   		{
+			   			id: int 礼品id
+			   			name: String 礼品名字
+			   			prize: int 所需米粒数
+			   			rank: int 顺序
+			   			type: int 类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下，5抽奖
+			   			iconSmall: String Icon小图
+							iconBig: String Icon大图
+			   		},
+			   		......
+			   		{}
+			   ]
+			   prize：int 用户米粒数
+			   			  
+	后端逻辑: 分页，数据库查询根据rank进行order by
+			  结果中需要去掉type=4
+			  仅返回isdel=0
+			  //TODO 强制增加抽奖的信息
+
+
+13、赠送米粒接口
+ 	接口名字：present/gift.ajax
+	输入参数：userid: int 用户id
+			  cellPhone: long 被赠送好友的手机号
+			  prize: int 赠送米粒数
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100141: 用户id不存在
+			  	100142: 被赠送方手机未注册
+			  	100143: 赠送米粒数小于用户的米粒数
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: {
+			   			prize: int 用户现在拥有的米粒数
+			   	}
+
+	后端逻辑: (1)插入exchange表
+				 1> present_id为被赠送方的用户id
+				 2> present_name为"赠"加上被赠送方的用户名
+				 3> present_prize为-1
+				 4> present_type=5
+				 5> prize为赠送的米粒数
+				 6> status值为0
+			   (2)从赠送方的user表current_prize减去米粒数，exchange加上米粒数
+			     1> update语句的时候必须加where条件: 当前用户的current_prize大于等于减去的米粒数
+			     2> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
+			   (3)从被赠送放得user表current_prize加上米粒数
+			  （4）将第一点的status值修改为3（兑换成功）
+			  （5）1\2\3\4点必须在同一个事务里
+			  （6）给被赠送方发送推送,必须在事务完成才可以进行
+			  	 1> 推送方案待定！！！！！！！！
+			  	 2> 推送话术待定!!!!!!!!!!!!！！
+
+
+14、发送邀请短信
+ 	接口名字：sendsms.ajax
+	输入参数：userid: int 用户id
+			  cellPhone: long 被赠送好友的手机号
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100201： 手机号不合法
+			  	100202： 验证码发送过于频繁
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+
+	后端逻辑: (1)需要将岁随机生成码放到code表
+			  (2)调用短信接口发送验证码
+
+15、礼品兑换历史接口
+ 	接口名字：gift/history.ajax
+	输入参数：userid: int 用户id
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100161: 用户名不存在
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: {
+			   			exchangePrize: int 用户兑换的米粒数
+			   			count:int 礼品数目
+			   			list：[
+			   				{
+				   				time:  -- long 时间
+					   			type：int 0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下
+					   			express：快递单号
+					   			status：未发货，已发货，现场兑换
+					   			gifts：	[
+						   				{
+						   					name: String 礼品名字
+						   					count: int 礼品数量
+						   					prize: int 米粒数量
+						   				},
+					   				]
+			   				}
+			   				........
+			   				{}
+			   			]
+			   	}
+
+	后端逻辑: list里面的数据从exchange表获取
+			  prize = currentPrize + exchangePrize
+			  其他数据从user表获取
+			  同一快递号放在一起
+
+
+16、礼品兑换接口
+ 	接口名字：gift/exchange.ajax
+	输入参数：userid: int 用户id
+			  ids: int[] 礼物id列表
+			  count: int[] 礼物数量必须和ids对应
+			  cellPhone: long 兑换电话卡的手机号(当礼物有手机充值和快递时，必须有值）
+			  aliAccount: String 支付宝提现账号(当礼物有支付宝取现，必须有值）
+			  prize: int 支付宝和银行卡提现的米粒数量(当礼物有支付宝和银行卡取现，必须有值）
+			  address: String 邮寄地址(当礼物有快递时，必须有值）
+			  name: String 姓名（当有银行转账和快递时，必须有值）
+			  bankName: String 开户行（当有银行转账时，必须有值）
+			  bankAccount: long 银行卡号（当有银行转账时，必须有值）
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100171: 用户名不存在
+			  	100172: 礼物不存在
+			  	100173: 数量必须大于0
+			  	100174: 米粒数不足
+			  	100175: 手机号不能为空
+			  	100176: 支付宝不能为空
+			  	100177: 提现的米粒数必须大于0
+			  	100178: 地址不能为空
+			  	100179: 姓名不能为空
+			  	1001710: 开户行不能为空
+			  	1001711: 银行卡号不能为空
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+	后端逻辑: (1)必须批量插入exchange表
+			  (2)从user表current_prize减去米粒数，exchange加上米粒数
+			     1> update语句的时候必须加where条件: 当前用户的current_prize大于等于减去的米粒数
+			     2> 如果有手机充值礼品，将手机号更新到user表的last_cell_phone_1字段
+			  	 3> 如果有支付宝提现，则将支付宝账号、提现的米粒数量更新到user表的last_alipay_account、exchange_prize字段
+			     4> 如有快递，则将邮寄地址、手机号、名字更新到user表的last_address、last_cell_phone_2、last_name字段
+			     5> 如有银行转账，则将名字、开户行、银行卡号更新到user表的last_name、last_bank_name、last_bank_account字段
+			     7> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
+			  (3)上述必须在同一个事务里
+			  
+17、兑换分享记录接口
+	接口名字：share.ajax
+	输入参数：userid：long 用户id
+						type；int 0：实物兑换/1：银行卡提现/2：支付宝提现/3：手机充值/4：抽奖/5：低调炫耀
+						target：int 0：微信好友/1：微信朋友圈/2：新浪微博
+						msg：String 分项内容
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+	后端逻辑: 直接插入表 是否共用表 TODO
+
+
+
+18、抽奖规则接口
+ 	接口名字：luck/rule.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data[
+			   		{
+			   			level: int 几等奖
+			   			gift: String 抽奖内容
+			   		},
+			   		......
+			   		{}
+			   ]
+
+	后端逻辑: 从lunck_draw里获取数据
+
+	http://localhost:8080/iwami/client/luck/rule.ajax
+
+19、抽奖接口
+ 	接口名字：luck/draw.ajax
+	输入参数：userid: int 用户id
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100191： 用户id不能为空
+			  	100192： 米粒数不足
+			  	100193： 超过可抽奖最大次数
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data{
+			   		level: int 中几等奖,-1代表没有中奖
+			   		gift: String 抽奖内容
+			   		prize: int  用户剩余米粒数
+			   		count: int 用户剩余抽奖次数
+			   }
+
+	后端逻辑: (1)如果luck_config表的count字段大于等于0，则将其与luck_history表统计的用户id记录条数进行比较，
+				如果统计用户id的luck_history的记录条数超出luck_config表的count则返回100193
+			  (2)用户剩余米粒数减去抽奖所需米粒数，然后需要在update中进行where判断，如update影响行数为0则返回100192
+			 （3）抽奖算概率
+			  (4)抽奖结果放在luck_history表中，即就是luck_history中的draw_id、gift对应luck_draw中的id、gift；所需米粒数则为luck_config的prize
+			  
+			  (5) 需要判断一等奖/二等奖最大数量 luck_rule.count
+
+	http://localhost:8080/iwami/client/luck/draw.ajax
+	http://localhost:8080/iwami/client/luck/draw.ajax?userid=2121
+	http://localhost:8080/iwami/client/luck/draw.ajax?userid=1
+
+
+20、发送验证码接口
+ 	接口名字：sendverifycode.ajax
+	输入参数：cellPhone: long 注册的手机号
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100201： 手机号不合法
+			  	100202： 验证码发送过于频繁
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+
+	后端逻辑: (1)需要将岁随机生成码放到code表
+			  (2)调用短信接口发送验证码
+			  
+			  
+	http://localhost:8080/iwami/client/sendverifycode.ajax
+	http://localhost:8080/iwami/client/sendverifycode.ajax?cellPhone=
+	http://localhost:8080/iwami/client/sendverifycode.ajax?cellPhone=121212
+	http://localhost:8080/iwami/client/sendverifycode.ajax?cellPhone=18611007602
+
+21、注册接口
+ 	接口名字：register.ajax
+	输入参数：uuid: String 设备id
+				alias: String android jpush推送id
+			  name: String 名字
+			  cellPhone: long 注册的手机号
+			  code: String 验证码
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100211： 手机号不合法
+			  	100212： 姓名不能为空
+			  	100213： y验证码不正确
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: {
+			   		userid: long 用户id
+			   		username: String 用户名
+			   		uuid: String 设备id
+			   		cellPhone: long 手机号
+			   }
+			   
+			   
+	http://localhost:8080/iwami/client/register.ajax
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=21212
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字&uuid=
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字&uuid=213123
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字&uuid=213123&code=
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字&uuid=213123&code=1212
+	http://localhost:8080/iwami/client/register.ajax?cellPhone=18611007602&name=我是汉字&uuid=213123&code=5467
+
+22、更新用户信息接口
+ 	接口名字：modifyuser.ajax
+	输入参数：userid: long  用户id
+			  age: int 年龄
+			  gender: int 性别：0帅哥，1美女
+	   		  job: String 职业
+			  address: String 地址
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100221：用户id不能为空
+			  	100222：年龄不能为空
+			  	100223：性别不能为空
+			  	100224：职业不能为空
+			  	100225：地址不能为空
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+
+	http://localhost:8080/iwami/client/modifyuser.ajax
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=121
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=0
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=100
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=9
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=1
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=1&job=
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=1&job=2121
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=1&job=2121&address=
+	http://localhost:8080/iwami/client/modifyuser.ajax?userid=1&age=13&gender=1&job=2121&address=332
+
+23、用户信息接口
+ 	接口名字：userinfo.ajax
+	输入参数：userid: long  用户id
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100231：用户id不能为空
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data：{
+			   		userid: long 用户id
+			   		username: String 用户名
+			   		uuid: String 设备id
+			   		cellPhone: long 手机号
+			   		age: int 年龄
+			  		gender: int 性别：0帅哥，1美女
+   		  		job: String 职业
+   		  		address: String 地址
+   		  		currentPrize: int 用户拥有米粒数目
+   		  		exchangePrize: int 用户已经兑换米粒数目
+   		  		lastCellPhone1: long 上次充值手机号
+   		  		lastAlipayAccount： String 上次支付宝账号
+   		  		lastBankAccount: long 上次银行账号
+   		  		lastBankName: String 上次银行卡开户行
+   		  		lastAddress: String 上次线上快递地址
+   		  		lastCellPhone2: String 上次线上快递手机号
+   		  		lastName: String 上次线上快递名字，当present_type=0时，必须有值
+			   }
+
+	http://localhost:8080/iwami/client/userinfo.ajax
+	http://localhost:8080/iwami/client/userinfo.ajax?userid=
+	http://localhost:8080/iwami/client/userinfo.ajax?userid=1212
+	http://localhost:8080/iwami/client/userinfo.ajax?userid=1
+
+
+24、获取联系信息接口
+ 	接口名字：contact.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100231：用户id不能为空
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data：{
+			   		phone1 String "客服电话"
+					email1 String "服务邮箱"
+					domain String "官网地址"
+					qq long "客服qq"
+					qqgroup String "qq群"
+					phone2 String "业务电话"
+					email2 String "业务邮箱"
+			   }
+			   
+	http://localhost:8080/iwami/client/contact.ajax
+			  
+25、个人分享任务接口
+	接口名字：wami/share.ajax
+	输入参数：无
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   data: [
+			   		{
+			   			id: int 任务id
+			   			name: String app名字
+			   			rank: int 顺序
+				   	 	intr: String  简介
+				   	 	prize: int  首次分享得米粒数
+				   	 	currentprize: int 分享数
+				   	 	type: int 任务类型: 0普通任务，1宝箱任务
+				   	 	available: int  是否抢光: 0未抢光，1抢光
+				   	 	icon: String Icon图
+
+			   		},
+			   		......
+			   		{}
+
+			   ]
+	后端逻辑: task表取出type为分享任务
+			  
+26、分享任务记录接口
+	接口名字：sharetask.ajax
+	输入参数：id：int 任务id
+						userid：long 用户id
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+	后端逻辑: 1. 验证task表中存在传入id
+					  2. 如果wami表中没有userid&id的记录，则user.current_prize增加prize
+					  	 wami表中添加记录
+					  	 task表中对应记录的current_prize增加1
+					  	 以上三步在同一个事务中
+
+27. apk下载地址
+	接口名字：download.ajax
+	输入参数：type：int 下载来源，用于后期统计
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+			   url：String apk下载地址
+
+	http://localhost:8080/iwami/client/download.ajax

@@ -20,7 +20,7 @@ public class ContactAjax {
 	private ContactBiz contactBiz;
 
 	@AjaxMethod(path = "contact.ajax")
-	public Map<Object, Object> download(Map<String, String> params) {
+	public Map<Object, Object> getContact(Map<String, String> params) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
