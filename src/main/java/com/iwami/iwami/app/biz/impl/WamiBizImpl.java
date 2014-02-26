@@ -27,6 +27,28 @@ public class WamiBizImpl  implements WamiBiz {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class, value="txManager")
+	public void share(User user, Task task, int type, long time, String channel) {
+		Wami lastestWami = wamiService.getLatestWami(user.getId(), task.getId());
+		
+		Wami wami = new Wami();
+		wami.setUserid(user.getId());
+		wami.setTaskId(task.getId());
+		wami.setType(type);
+		wami.setPrize(task.getPrize());
+		wami.setChannel(channel);
+		wami.setAddTime(new Date(time));
+		wami.setLastmodUserid(user.getId());
+		wamiService.newWami(wami);
+		
+		if(lastestWami == null && type == Task.STATUS_FINISH){
+			// finish task
+			taskService.incrTaskCurrentPrize(task.getId());
+			userService.addUserCurrentPrize(user.getId(), task.getPrize());
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class, value="txManager")
 	public void wami(User user, Task task, int type, long time, String channel) throws TaskRepeatStartException, TaskNotExistsException, TaskFinishedException, TaskUnavailableException, TaskWamiedException {
 		Wami lastestWami = wamiService.getLatestWami(user.getId(), task.getId());
 		
@@ -46,7 +68,7 @@ public class WamiBizImpl  implements WamiBiz {
 				throw new TaskUnavailableException();
 		}
 		
-		if(lastestWami.getType() == Task.STATUS_FINISH)
+		if(lastestWami != null && lastestWami.getType() == Task.STATUS_FINISH)
 			throw new TaskWamiedException();
 		
 		Wami wami = new Wami();

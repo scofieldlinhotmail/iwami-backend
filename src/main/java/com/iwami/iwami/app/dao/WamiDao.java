@@ -15,8 +15,8 @@ public interface WamiDao {
 
 	public Map<Long, Wami> getLatestWami(long userid, List<Long> taskids);
 
-	public List<Long> getDoneTaskIds(long userid, Date start);
+	public Map<Long, Wami> getDoneTaskIds(long userid, Date start);
 
-	public List<Long> getOngoingWami(long userid);
+	public Map<Long, Wami> getOngoingWami(long userid);
 	
 }

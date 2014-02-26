@@ -62,6 +62,8 @@
 	</bean>
 	<bean name="wamiAjax" class="com.iwami.iwami.app.ajax.WamiAjax">
 		<property name="wamiBiz" ref="wamiBiz"></property>
+		<property name="taskBiz" ref="taskBiz"></property>
+		<property name="userBiz" ref="userBiz" />
 	</bean>
 	<bean name="strategyAjax" class="com.iwami.iwami.app.ajax.StrategyAjax">
 		<property name="strategyBiz" ref="strategyBiz"></property>
@@ -99,12 +101,15 @@
 	</bean>
 	<bean name="wamiBiz" class="com.iwami.iwami.app.biz.impl.WamiBizImpl">
 		<property name="wamiService" ref="wamiService" />
+		<property name="taskService" ref="taskService" />
+		<property name="userService" ref="userService" />
 	</bean>
 	<bean name="strategyBiz" class="com.iwami.iwami.app.biz.impl.StrategyBizImpl">
 		<property name="strategyService" ref="strategyService" />
 	</bean>
 	<bean name="taskBiz" class="com.iwami.iwami.app.biz.impl.TaskBizImpl">
 		<property name="taskService" ref="taskService" />
+		<property name="wamiService" ref="wamiService" />
 	</bean>
 	
 	<!-- service -->

@@ -28,12 +28,12 @@ public class WamiServiceImpl implements WamiService{
 	}
 
 	@Override
-	public List<Long> getDoneTaskIds(long userid, Date start) {
+	public Map<Long, Wami> getDoneTaskIds(long userid, Date start) {
 		return wamiDao.getDoneTaskIds(userid, start);
 	}
 
 	@Override
-	public List<Long> getOngoingWami(long userid) {
+	public Map<Long, Wami> getOngoingWami(long userid) {
 		return wamiDao.getOngoingWami(userid);
 	}
 

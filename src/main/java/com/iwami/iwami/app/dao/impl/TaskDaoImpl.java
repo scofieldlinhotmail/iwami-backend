@@ -25,7 +25,7 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 
 	@Override
 	public TreasureConfig getTreasureConfig() {
-		List<TreasureConfig> configs = getJdbcTemplate().query("select id, days, count, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TREASURE_CONFIG + " where isdel = ? order by lastmod_time desc limit 1", new TreasureConfigRowMapper());
+		List<TreasureConfig> configs = getJdbcTemplate().query("select `id`, `days`, `count`, `lastmod_time`, `lastmod_userid` from " + SqlConstants.TABLE_TREASURE_CONFIG + " where isdel = 0 order by lastmod_time desc limit 1", new TreasureConfigRowMapper());
 		
 		if(configs != null && configs.size() > 0)
 			return configs.get(0);

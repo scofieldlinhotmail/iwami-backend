@@ -22,4 +22,6 @@ public interface IWamiConstants {
 
 	public static final String CACHE_STRATEGY_IMAGE_KEY = "iwami#CACHE#STRATEGY_IMAGE";
 
+	public static final int TOP_COUNT = 3;
+
 }

@@ -23,6 +23,64 @@ public class TaskAjax {
 	
 	private TaskBiz taskBiz;
 	
+	@AjaxMethod(path = "wami/share.ajax")
+	public Map<Object, Object> getShareTasks(Map<String, String> params) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		
+		try{
+			List<Task> tasks = taskBiz.getShareTasks();
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+			result.put("data", parseShareTasks(tasks));
+		} catch(Throwable t){
+			if(logger.isErrorEnabled())
+				logger.error("Exception in top.ajax", t);
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
+		}
+		
+		
+		return result;
+	}
+
+	private List<Map<String, Object>> parseShareTasks(List<Task> tasks) {
+		List<Map<String, Object>> data = new ArrayList<Map<String,Object>>();
+		
+		if(tasks != null && tasks.size() > 0)
+			for(Task task : tasks)
+				if(task != null){
+					Map<String, Object> tmp = new HashMap<String, Object>();
+					
+					tmp.put("id", task.getId());
+					tmp.put("name", task.getName());
+					tmp.put("rank", task.getRank());
+					tmp.put("intr", task.getIntr());
+					tmp.put("prize", task.getPrize());
+					tmp.put("currentprize", task.getCurrentPrize());
+					tmp.put("icon", task.getIconSmall());
+					
+					data.add(tmp);
+				}
+		
+		return data;
+	}
+	
+	@AjaxMethod(path = "wami/treasure.ajax")
+	public Map<Object, Object> getTreasureTasks(Map<String, String> params) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		
+		try{
+			List<Task> tasks = taskBiz.getTreasureTasks(NumberUtils.toLong(params.get("userid"), -1));
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+			result.put("data", parseTasks(tasks));
+		} catch(Throwable t){
+			if(logger.isErrorEnabled())
+				logger.error("Exception in top.ajax", t);
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
+		}
+		
+		
+		return result;
+	}
+	
 	@AjaxMethod(path = "wami/tasks.ajax")
 	public Map<Object, Object> getWamiTasks(Map<String, String> params) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
@@ -110,6 +168,8 @@ public class TaskAjax {
 					tmp.put("reputation", task.getReputation());
 					tmp.put("icomSmall", task.getIconSmall());
 					tmp.put("iconBig", task.getIconBig());
+					tmp.put("iconGray", task.getIconGray());
+					tmp.put("status", task.getStatus());
 					
 					data.add(tmp);
 				}

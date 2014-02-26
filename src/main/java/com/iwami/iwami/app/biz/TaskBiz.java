@@ -15,4 +15,8 @@ public interface TaskBiz {
 
 	public Task getTaskById(long taskid);
 
+	public List<Task> getTreasureTasks(long userid);
+
+	public List<Task> getShareTasks();
+
 }

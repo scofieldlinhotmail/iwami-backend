@@ -44,30 +44,30 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 				new Object[]{0, userid}, new WamiRowMapper());
 		if(tmp != null && tmp.size() > 0)
 			for(Wami wami : tmp)
-				wamis.put(wami.getId(), wami);
+				wamis.put(wami.getTaskId(), wami);
 		
 		return wamis;
 	}
 
 	@Override
-	public List<Long> getDoneTaskIds(long userid, Date start) {
-		return getJdbcTemplate().query("select task_id from " + SqlConstants.TABLE_WAMI + " where userid = ? and type = ? and lastmod_time > ?", new Object[]{userid, Task.STATUS_FINISH, start}, new RowMapper<Long>(){
-			@Override
-			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return rs.getLong("task_id");
-			}
-		});
+	public Map<Long, Wami> getDoneTaskIds(long userid, Date start) {
+		final Map<Long, Wami> wamis = new HashMap<Long, Wami>();
+		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and type = ? and lastmod_time > ?", new Object[]{0, userid, Task.STATUS_FINISH, start}, new WamiRowMapper());
+		if(tmp != null && tmp.size() > 0)
+			for(Wami wami : tmp)
+				wamis.put(wami.getTaskId(), wami);
+		return wamis;
 	}
 
 	@Override
-	public List<Long> getOngoingWami(long userid) {
-		return getJdbcTemplate().query("select task_id from (select task_id, type from (select task_id, type from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? order by lastmod_time, id desc) tmp group by task_id) tmp2 where type <> ?", 
-				new Object[]{userid, Task.STATUS_FINISH}, new RowMapper<Long>(){
-			@Override
-			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return rs.getLong("task_id");
-			}
-		});
+	public Map<Long, Wami> getOngoingWami(long userid) {
+		final Map<Long, Wami> wamis = new HashMap<Long, Wami>();
+		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from (select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from (select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? order by lastmod_time, id desc) tmp group by task_id) tmp2 where type <> ?", 
+				new Object[]{0, userid, Task.STATUS_FINISH}, new WamiRowMapper());
+		if(tmp != null && tmp.size() > 0)
+			for(Wami wami : tmp)
+				wamis.put(wami.getTaskId(), wami);
+		return wamis;
 	}
 
 }

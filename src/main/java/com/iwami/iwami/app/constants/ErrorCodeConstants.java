@@ -64,6 +64,11 @@ public class ErrorCodeConstants {
 	public static final int STATUS_WAMI_TYPE = 100042;
 	public static final int STATUS_WAMI_USERID = 100043;
 	public static final int STATUS_WAMI_TIME = 100044;
+	public static final int STATUS_TASK_WAMIED = 100045;
+	public static final int STATUS_TASK_UNAVAILABLE = 100046;
+	public static final int STATUS_TASK_FINISHED = 100047;
+	public static final int STATUS_TASK_NOT_EXISTS = 100048;
+	public static final int STATUS_WAMI_REPEAT_START = 100049;
 	
 	public static Map<Integer, String> ERROR_MSG_MAP = new HashMap<Integer, String>();
 	
@@ -106,5 +111,10 @@ public class ErrorCodeConstants {
 		ERROR_MSG_MAP.put(STATUS_WAMI_TASKID, "taskid不存在");
 		ERROR_MSG_MAP.put(STATUS_WAMI_TYPE, "type不对");
 		ERROR_MSG_MAP.put(STATUS_WAMI_TIME, "上传时间不能为空");
+		ERROR_MSG_MAP.put(STATUS_TASK_WAMIED, "已经挖过这个任务");
+		ERROR_MSG_MAP.put(STATUS_TASK_UNAVAILABLE, "任务已经挖光");
+		ERROR_MSG_MAP.put(STATUS_TASK_FINISHED, "任务已经结束");
+		ERROR_MSG_MAP.put(STATUS_TASK_NOT_EXISTS, "任务不存在");
+		ERROR_MSG_MAP.put(STATUS_WAMI_REPEAT_START, "不能重复挖这个任务");
 	}
 }
