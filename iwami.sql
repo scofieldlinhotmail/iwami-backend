@@ -8,7 +8,7 @@ use iwami;
 
 -- app启动表
 create table  onstart (
-	userid int(10) not null default -1 comment "用户id",
+	userid bigint(20) not null default -1 comment "用户id",
 	cell_phone bigint(20) not null default -1 comment "手机号",
 	uuid varchar(50) not null comment "设备id",
 	gps varchar(50) not null comment "用户gps位置",
@@ -26,7 +26,7 @@ create table  strategy_images (
 	rank int(10)  not null comment  "顺序",
 	icon_url varchar(255) not null  comment "焦点图",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -41,7 +41,7 @@ create table  strategy_list (
 	icon_small varchar(255) not null  comment "Icon小图",
 	icon_big varchar(255) not null  comment "Icon大图",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -78,7 +78,7 @@ create table  strategy_info (
 	content varchar(2048) not null comment "评论内容",
 	url varchar(255) not null  comment "评论图片",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
 	primary key(id),
 	index siid (strategy_id)
@@ -91,7 +91,7 @@ create table  tips (
 	type tinyint(3) not null comment "话术类型：0挖米广告词,1任务抢光提示",
 	content varchar(255) not null comment "话术内容",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -128,16 +128,18 @@ create table task (
 -- 挖米表
 create table wami (
 	id bigint(20) not null auto_increment comment "自增id",
-	userid int(10) not null comment "用户id",
+	userid bigint(20) not null comment "用户id",
     task_id bigint(20) not null  comment "米粒任务id",
-    type tinyint(3) not null comment "挖米类型: 0下载开始，1下载完成，2安装完成，3启动运行，4关闭/任务完成",
+    type tinyint(3) not null comment "挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成",
     prize int(10) default 0 not null  comment "米粒数",
     channel varchar(50) comment "渠道",
     add_time datetime not null comment "客户端上传时间",
 	lastmod_time datetime not null comment "服务器添加时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
-	primary key(id)
+	primary key(id),
+	index wkey1 (userid),
+	index wkey2 (task_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -147,12 +149,13 @@ create table present (
 	id bigint(20) not null auto_increment comment "自增id",
 	name varchar(255) not null comment "礼品名字",
 	prize int(10) not null default 0 comment "所需米粒数",
+	count int(10) not null default -1 comment "最低提现米粒",
 	rank int(10)  not null comment  "顺序",
-	type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下",
+	type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下, 5抽奖,6赠送",
 	icon_small varchar(255) not null  comment "Icon小图",
 	icon_big varchar(255)  comment "Icon大图",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -162,11 +165,11 @@ create table present (
 -- 礼品兑换表
 create table exchange (
 	id bigint(20) not null auto_increment comment "自增id",
-	userid int(10) not null comment "用户id",
+	userid bigint(20) not null comment "用户id",
 	presentid bigint(20) not null comment "礼品id，当为赠送时为被赠送方用户id",
 	present_name  varchar(255) not null comment "被赠送礼品的用户名字",
 	present_prize  int(10) not null comment "单个礼品所需米粒数,赠送米粒时数量为-1",
-	present_type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下,5赠送",
+	present_type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下, 5抽奖,6赠送",
 	count int(10) not null comment "礼品数量，赠送米粒时数量为-1",
 	prize int(10) not null comment "全部米粒数目",
 	status tinyint(3) not null default 0 comment "状态：0新建，1余额不足，2扣除米粒成功，3兑换成功",
@@ -176,9 +179,10 @@ create table exchange (
 	bank_name varchar(255) comment "银行卡开户行,当present_type=3时，必须有值",
 	address varchar(255) comment "线上快递地址，当present_type=0时，必须有值",
 	name  varchar(255) comment "线上快递名字，当present_type=0时，必须有值",
-	express varchar(50) comment "线上快递单号，当present_type=0时，必须有值",
+	express_name varchar(50) comment "线上快递名称",
+	express_no varchar(50) comment "线上快递单号",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(id),
 	index ekey1 (userid),
@@ -198,7 +202,7 @@ create table user (
 	last_cell_phone_2  bigint(20)  comment "上次线上快递手机号",
 	last_name  varchar(255) comment "上次线上快递名字，当present_type=0时，必须有值",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -216,7 +220,7 @@ create table user_info (
 	address varchar(255) comment "地址",
 	add_time datetime not null comment "注册时间",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(userid),
 	index uiid (cell_phone)
@@ -227,7 +231,7 @@ create table user_info (
 
 -- 验证码表
 create table code (
-	userid int(10) not null default 0 comment "用户id",
+	userid bigint(20) not null default 0 comment "用户id",
 	cell_phone bigint(20) not null comment "手机号",
 	code varchar(30) not null comment "验证码",
 	add_time datetime not null comment "验证码生成时间",
@@ -247,18 +251,7 @@ create table contact (
 	phone2 varchar(20) not null comment "业务电话",
 	email2 varchar(30) not null  comment "业务邮箱",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
-	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
-	primary key(id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- 抽奖配置表
-create table luck_config(
-	id int(10) not null auto_increment comment "自增id",
-	count int(10) not null default 0 comment "每人最大抽奖次数：-1代表不限制次数",
-	prize int(10) not null comment "所需米粒数",
-	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -268,10 +261,10 @@ create table luck_rule (
 	id int(10) not null auto_increment comment "自增id",
 	index_lev tinyint(3) not null comment "几等奖",
 	gift  varchar(50) not null comment "抽奖内容",
-	prob tinyint(3) not null comment "抽奖概率",
+	prob int(10) not null comment "抽奖概率",
 	count int(10) not null comment "每天最大数量",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -279,14 +272,14 @@ create table luck_rule (
 -- 抽奖历史表
 create table luck_history (
 	id bigint(20) not null auto_increment comment "自增id",
-	userid int(10) not null comment "用户id",
+	userid bigint(20) not null comment "用户id",
 	user_name varchar(255) not null comment "用户名",
 	cell_phone bigint(20) not null comment "手机号",
 	draw_id int(10) not null  comment "抽奖id",
 	draw_prize int(10) not null comment "所需米粒数",
 	gift  varchar(50) not null comment "抽奖内容",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	index lhid (userid),
 	primary key(id)
@@ -300,7 +293,7 @@ create table apk(
 	`force` tinyint(3) default 0 not null comment "是否强制升级:0否，1是",
 	`desc` varchar(255) comment "升级特性",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -308,7 +301,7 @@ create table apk(
 -- 兑换分享记录表
 create table share (
 	id bigint(20) not null auto_increment comment "自增id",
-	userid int(10) not null comment "用户id",
+	userid bigint(20) not null comment "用户id",
 	type tinyint(3) not null comment "0：实物兑换/1：银行卡提现/2：支付宝提现/3：手机充值/4：抽奖/5：低调炫耀",
 	target tinyint(3) not null comment "0：微信好友/1：微信朋友圈/2：新浪微博",
 	msg varchar(255) not null comment "分享内容",
@@ -323,7 +316,7 @@ create table treasure_config (
 	days tinyint(3) not null comment "N天",
 	count tinyint(3) not null comment "连续M次",
 	lastmod_time datetime not null comment "上次修改时间",
-	lastmod_userid int(10) not null comment "上次修改人",
+	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

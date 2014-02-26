@@ -74,7 +74,7 @@
 
 5、游戏金榜接口
 	接口名字：top.ajax
-	输入参数：无
+	输入参数：userid:  int  用户ID, -1代表未登录
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
@@ -95,6 +95,7 @@
 			   	 	register: int 是否需要注册: 0不需要,1需要
 			   	 	time: int 运行时间（单位：秒）
 			   	 	star: int 星级数
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
 			   	 	reputation：int 好评数
 			   	 	iconSmall: String Icon小图
 						iconBig: String Icon大图
@@ -114,6 +115,7 @@
 			   	 	register: int 是否需要注册: 0不需要,1需要
 			   	 	time: int 运行时间（单位：秒）
 			   	 	star: int 星级数
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
 			   	 	reputation：int 好评数
 			   	 	iconSmall: String Icon小图
 						iconBig: String Icon大图
@@ -134,7 +136,7 @@
 	接口名字：wami.ajax
 	输入参数：userid:  int  用户ID
 			  taskid:  int  任务ID
-			  type:	int  挖米类型: 0下载开始，1下载完成，2安装完成，3启动运行，4关闭/任务完成
+			  type:	int  挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
 			  time:	long  客户端上传时间（单位：毫秒）
 			  channel：String 渠道值，线上可以为空（服务端固定值）
 	输出参数：status：int值  
@@ -145,6 +147,11 @@
 			  	100042：type不对
 			  	100043：userid不存在
 			  	100044:	time不能为空
+			  	100045:	已经挖过这个任务
+			  	100046:	任务已经挖光
+			  	100047:	任务已经结束
+			  	100048:	任务不存在
+			  	100049:	不能重复挖这个任务
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息	
 	后端逻辑: wami表的prize从task表对应taskid获取prize
@@ -245,7 +252,7 @@
 
 10、米粒任务接口
 	接口名字：wami/tasks.ajax
-	输入参数：userid:  int  用户ID
+	输入参数：userid:  int  用户ID, -1代表未登录
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
@@ -261,15 +268,14 @@
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
-				   	 	type: int 任务类型: 0普通任务，1宝箱任务
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 
 				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
-							lastmodtime: long 修改时间
 
 			   		},
 			   		......
@@ -285,15 +291,14 @@
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
-				   	 	type: int 任务类型: 0普通任务，1宝箱任务
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
+			   	 	status: int 用户执行任务状态 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行
 				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
-							lastmodtime: long 修改时间
 
 			   		},
 			   		......
@@ -309,15 +314,14 @@
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
-				   	 	type: int 任务类型: 0普通任务，1宝箱任务
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
+			   	 	status: int 用户执行任务状态 5关闭/任务完成
 				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
-							lastmodtime: long 修改时间
 
 			   		},
 			   		......
@@ -335,7 +339,7 @@
 			  
 11、米粒宝箱接口
 	接口名字：wami/treasure.ajax
-	输入参数：无
+	输入参数：userid:  int  用户ID, -1代表未登录
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
@@ -351,15 +355,14 @@
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
-				   	 	type: int 任务类型: 0普通任务，1宝箱任务
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
 				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
-							lastmodtime: long 修改时间
 
 			   		},
 			   		......
@@ -376,22 +379,19 @@
 
 12、礼品列表接口
  	接口名字：present/list.ajax
-	输入参数：userid:  int  用户ID
-				start: int 起始攻略数从0开始
-			  step: int 步长
+	输入参数：userid:  int  用户ID, -1代表未登录
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
 			  	400： 后端错误
-			  	100131: start必须大于等于0
-			  	100132: step必须大于0
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 			   data: [
 			   		{
 			   			id: int 礼品id
 			   			name: String 礼品名字
-			   			prize: int 所需米粒数
+			   			prize: int 所需米粒数，提现/充值时为多少米粒兑换一元
+			   			count: int 最低提现米粒数，实物兑换忽略
 			   			rank: int 顺序
 			   			type: int 类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下，5抽奖
 			   			iconSmall: String Icon小图
@@ -400,12 +400,7 @@
 			   		......
 			   		{}
 			   ]
-			   prize：int 用户米粒数
 			   			  
-	后端逻辑: 分页，数据库查询根据rank进行order by
-			  结果中需要去掉type=4
-			  仅返回isdel=0
-			  //TODO 强制增加抽奖的信息
 
 
 13、赠送米粒接口
@@ -420,6 +415,9 @@
 			  	100141: 用户id不存在
 			  	100142: 被赠送方手机未注册
 			  	100143: 赠送米粒数小于用户的米粒数
+			  	100144: 不能赠送给自己
+			  	100145: 不能赠送给自己
+			  	100146: 米粒数必须大于0
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 			   data: {
@@ -454,11 +452,12 @@
 			  	400： 后端错误
 			  	100201： 手机号不合法
 			  	100202： 验证码发送过于频繁
+			  	100203: 用户id不存在
+			  	100204: 不能邀请自己
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 
-	后端逻辑: (1)需要将岁随机生成码放到code表
-			  (2)调用短信接口发送验证码
+	后端逻辑: 调用短信接口发送验证码
 
 15、礼品兑换历史接口
  	接口名字：gift/history.ajax
@@ -614,8 +613,8 @@
 			  	0: 返回成功
 			  	300： 缺少参数
 			  	400： 后端错误
-			  	100201： 手机号不合法
-			  	100202： 验证码发送过于频繁
+			  	200201： 手机号不合法
+			  	200202： 验证码发送过于频繁
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 
@@ -767,13 +766,11 @@
 			   data: [
 			   		{
 			   			id: int 任务id
-			   			name: String app名字
+			   			name: String 任务名字
 			   			rank: int 顺序
 				   	 	intr: String  简介
 				   	 	prize: int  首次分享得米粒数
 				   	 	currentprize: int 分享数
-				   	 	type: int 任务类型: 0普通任务，1宝箱任务
-				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	icon: String Icon图
 
 			   		},
@@ -785,8 +782,10 @@
 			  
 26、分享任务记录接口
 	接口名字：sharetask.ajax
-	输入参数：id：int 任务id
+	输入参数：taskid：int 任务id
 						userid：long 用户id
+					  time:	long  客户端上传时间（单位：毫秒）
+					  channel：String 渠道值，线上可以为空（服务端固定值）
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数

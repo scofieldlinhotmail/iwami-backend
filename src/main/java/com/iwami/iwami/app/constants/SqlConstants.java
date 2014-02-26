@@ -39,4 +39,10 @@ public interface SqlConstants {
 	public static final String TABLE_TASK = DATABASE + ".`task`";
 
 	public static final String TABLE_TREASURE_CONFIG = DATABASE + ".`treasure_config`";
+
+	public static final String TABLE_PRESENT = DATABASE + ".`present`";
+
+	public static final String TABLE_EXCHANGE = DATABASE + ".`exchange`";
+
+	public static final String TABLE_SHARE = DATABASE + ".`share`";
 }

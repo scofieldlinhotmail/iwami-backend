@@ -43,7 +43,7 @@ public class WamiAjaxTest extends TestCase {
 
 	@Test
 	public void testStatusUpload(){
-		if(true){
+		if(flag){
 			WamiAjax ajax = getAjax();
 			Map<String, String> params = new HashMap<String, String>();
 			System.out.println(ajax.statusUpload(params));

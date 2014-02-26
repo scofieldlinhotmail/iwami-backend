@@ -60,7 +60,7 @@ public class LuckyBizImpl implements LuckyBiz {
 		}
 		
 		// substract from user.current_price
-		if(userService.subUserCurrentPrize4Draw(user.getId(), config.getPrize())){
+		if(userService.subUserCurrentPrize(user.getId(), config.getPrize())){
 			LuckyHistory history = new LuckyHistory();
 			history.setUserid(user.getId());
 			history.setUsername(user.getName());

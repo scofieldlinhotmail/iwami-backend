@@ -9,7 +9,7 @@ public interface UserService {
 
 	public User getUserById(long id);
 	
-	public boolean subUserCurrentPrize4Draw(long userid, int prize);
+	public boolean subUserCurrentPrize(long userid, int prize);
 
 	public boolean addCode(Code code);
 

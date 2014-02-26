@@ -23,6 +23,11 @@ public class UserBizImpl implements UserBiz {
 		return userService.getUserById(userid);
 	}
 
+	@Override
+	public User getUserByCellPhone(long cellPhone) {
+		return userService.getUserByCellPhone(cellPhone);
+	}
+
 	public UserService getUserService() {
 		return userService;
 	}
@@ -48,6 +53,20 @@ public class UserBizImpl implements UserBiz {
 					throw new RuntimeException("Error in sending code to cell phone.");
 			} else
 				throw new RuntimeException("Error in saving code into db.");
+		}
+		return result;
+	}
+
+	@Override
+	public boolean sendSMS(long cellPhone, User user) {
+		boolean result = false;
+		
+		if(cellPhone > 0){
+			//TODO modify sms content
+			if(SMSUtils.sendLuosiMao("发送邀请短信", "" + cellPhone))
+				result = true;
+			else
+				throw new RuntimeException("Error in sending code to cell phone.");
 		}
 		return result;
 	}

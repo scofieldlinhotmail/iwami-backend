@@ -13,6 +13,7 @@ import com.iwami.iwami.app.dao.LuckyDao;
 import com.iwami.iwami.app.model.LuckyConfig;
 import com.iwami.iwami.app.model.LuckyHistory;
 import com.iwami.iwami.app.model.LuckyRule;
+import com.iwami.iwami.app.model.Present;
 
 public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 
@@ -58,7 +59,7 @@ public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 
 	@Override
 	public LuckyConfig getLuckyConfig() {
-		List<LuckyConfig> configs = getJdbcTemplate().query("select id, count, prize, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_LUCKY_CONFIG + " where isdel = 0 order by lastmod_time desc limit 1", new RowMapper<LuckyConfig>(){
+		List<LuckyConfig> configs = getJdbcTemplate().query("select id, name, prize, `count`, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_PRESENT + " where isdel = ? and type = ? order by lastmod_time desc limit 1", new Object[]{0, Present.TYPE_LUCK}, new RowMapper<LuckyConfig>(){
 
 			@Override
 			public LuckyConfig mapRow(ResultSet rs, int rowNum)
@@ -77,25 +78,6 @@ public class LuckyDaoImpl extends JdbcDaoSupport implements LuckyDao {
 			return configs.get(0);
 		else
 			return null;
-	}
-
-	@Override
-	public boolean delLuckyConfig(long id) {
-		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_LUCKY_CONFIG + " set isdel = 1 where id = ?", new Object[]{id});
-		if(count > 0)
-			return true;
-		else
-			return false;
-	}
-
-	@Override
-	public boolean addLuckyConfig(LuckyConfig config) {
-		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_LUCKY_CONFIG + "(count, prize, lastmod_time, lastmod_userid, isdel) values(?,?,now(),?,0)", 
-				new Object[]{config.getCount(), config.getPrize(), config.getLastmodUserid()});
-		if(count > 0)
-			return true;
-		else
-			return false;
 	}
 
 	@Override

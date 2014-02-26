@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean subUserCurrentPrize4Draw(long userid, int prize) {
-		return userDao.subUserCurrentPrize4Draw(userid, prize);
+	public boolean subUserCurrentPrize(long userid, int prize) {
+		return userDao.subUserCurrentPrize(userid, prize);
 	}
 
 	@Override

@@ -16,10 +16,6 @@ public interface LuckyDao {
 	public boolean addLuckyRule(LuckyRule rule);
 	
 	public LuckyConfig getLuckyConfig();
-	
-	public boolean delLuckyConfig(long id);
-	
-	public boolean addLuckyConfig(LuckyConfig config);
 
 	public boolean addLuckyHistory(LuckyHistory history);
 	

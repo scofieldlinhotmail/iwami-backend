@@ -88,7 +88,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	}
 
 	@Override
-	public boolean subUserCurrentPrize4Draw(long userid, int prize) {
+	public boolean subUserCurrentPrize(long userid, int prize) {
 		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ? where id = ? and current_prize >= ? and isdel = 0", new Object[]{prize, userid, prize});
 		if(count > 0)
 			return true;
