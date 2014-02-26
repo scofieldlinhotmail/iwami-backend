@@ -2,6 +2,7 @@ package com.iwami.iwami.app.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.iwami.iwami.app.comparator.PresentRankComparator;
 import com.iwami.iwami.app.constants.IWamiConstants;
@@ -49,6 +50,16 @@ public class PresentServiceImpl implements PresentService {
 	@Override
 	public boolean addShareExchange(Share share) {
 		return presentDao.addShareExchange(share);
+	}
+
+	@Override
+	public Map<Long, Present> getPresentsByIds(List<Long> ids) {
+		return presentDao.getPresentsByIds(ids);
+	}
+
+	@Override
+	public void updateExchangesStatus(List<Long> ids, int status) {
+		presentDao.updateExchangeStatus(ids, status);
 	}
 
 	public long getExpireTime() {

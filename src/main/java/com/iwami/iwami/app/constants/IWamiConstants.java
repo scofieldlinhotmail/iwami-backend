@@ -26,4 +26,6 @@ public interface IWamiConstants {
 
 	public static final int TOP_COUNT = 3;
 
+	public static final String SEPARATOR_PRESENT = ",";
+
 }

@@ -27,4 +27,6 @@ public interface UserDao {
 
 	public void addUserCurrentPrize(long userid, int prize);
 
+	public boolean updateUser4ExpressExchange(long userid, int allPrize, long cellPhone, String address, String name);
+
 }

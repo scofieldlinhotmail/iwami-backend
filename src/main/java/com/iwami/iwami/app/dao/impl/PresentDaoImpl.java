@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.nuxeo.common.utils.StringUtils;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -34,7 +38,7 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_name, address, name, express_name, express_no, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?)");
+				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_name, address, name, express_name, express_no, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				ps.setObject(1, exchange.getUserid());
 				ps.setObject(2, exchange.getPresentId());
 				ps.setObject(3, exchange.getPresentName());
@@ -69,10 +73,27 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 	}
 
 	@Override
+	public void updateExchangeStatus(List<Long> ids, int status) {
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_EXCHANGE + " set status = ? where id in (" + StringUtils.join(ids.toArray(), ","), new Object[]{status});
+		}
+
+	@Override
 	public boolean addShareExchange(Share share) {
 		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_SHARE + "(userid, type, target, msg, lastmod_time) valiues(?, ?, ?, ?, now())",
 				new Object[]{share.getUserid(), share.getType(), share.getTarget(), share.getMsg()});
 		return count > 0;
+	}
+
+	@Override
+	public Map<Long, Present> getPresentsByIds(List<Long> ids) {
+		List<Present> tmp = getJdbcTemplate().query("select id, name, prize, `count`, rank, type, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_PRESENT + " where isdel = ? and id in (" + StringUtils.join(ids.toArray(), ",") + ")", new Object[]{0}, new PresentRowMapper());
+		Map<Long, Present> presents = new HashMap<Long, Present>();
+		
+		if(tmp != null && tmp.size() > 0)
+			for(Present present : tmp)
+				presents.put(present.getId(), present);
+		
+		return presents;
 	}
 
 }

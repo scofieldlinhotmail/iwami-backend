@@ -15,6 +15,7 @@ import com.iwami.iwami.app.biz.UserBiz;
 import com.iwami.iwami.app.common.dispatch.AjaxClass;
 import com.iwami.iwami.app.common.dispatch.AjaxMethod;
 import com.iwami.iwami.app.constants.ErrorCodeConstants;
+import com.iwami.iwami.app.constants.IWamiConstants;
 import com.iwami.iwami.app.exception.NotEnoughPrizeException;
 import com.iwami.iwami.app.model.Present;
 import com.iwami.iwami.app.model.User;
@@ -28,6 +29,132 @@ public class PresentAjax {
 	private PresentBiz presentBiz;
 	
 	private UserBiz userBiz;
+
+	@AjaxMethod(path = "gift/express.ajax")
+	public Map<Object, Object> exchangeExpressPresents(Map<String, String> params) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		
+		try{
+			if(params.containsKey("userid") && params.containsKey("ids") && params.containsKey("counts") && params.containsKey("cellPhone")
+					 && params.containsKey("address") && params.containsKey("name")){
+				long userid = NumberUtils.toLong(params.get("userid"), -1);
+				if(userid > 0){
+					// 1. split ids
+					String[] tmpids = StringUtils.split(params.get("ids"), IWamiConstants.SEPARATOR_PRESENT);
+					// 2. check ids
+					if(tmpids != null && tmpids.length > 0){
+						List<Long> ids = new ArrayList<Long>();
+						for(String tmpid : tmpids){
+							long id = NumberUtils.toLong(tmpid, -1);
+							if(id > 0)
+								ids.add(id);
+						}
+						
+						if(ids.size() == tmpids.length){
+							String[] tmpcounts = StringUtils.split(params.get("counts"), IWamiConstants.SEPARATOR_PRESENT);
+							if(tmpcounts != null && tmpcounts.length > 0){
+								List<Integer> counts = new ArrayList<Integer>();
+								for(String tmpcount : tmpcounts){
+									int count = NumberUtils.toInt(tmpcount, -1);
+									if(count > 0)
+										counts.add(count);
+								}
+								
+								if(counts.size() == ids.size()){
+									long cellPhone = NumberUtils.toLong(params.get("cellPhone"), -1);
+									if(cellPhone > 0 && IWamiUtils.validatePhone("" + cellPhone)){
+										String address = StringUtils.trimToEmpty(params.get("address"));
+										if(StringUtils.isNotBlank(address)){
+											String name = StringUtils.trimToEmpty(params.get("name"));
+											if(StringUtils.isNotBlank(name)){
+												User user = userBiz.getUserById(userid);
+												if(user != null){
+													// 3. get present by ids
+													Map<Long, Present> presents = presentBiz.getPresentsByIds(ids);
+													// 4. present count = ids.length?
+													if(presents != null && presents.size() == ids.size()){
+														// 5. group by type
+														List<Present> onlineExpress = new ArrayList<Present>();
+						
+														for(Present present : presents.values())
+															if(present.getType() == Present.TYPE_ONLINE_EMS)
+																onlineExpress.add(present);
+														
+														if(onlineExpress.size() == ids.size()){
+															Map<Present, Integer> presentCnts = new HashMap<Present, Integer>();
+															int allPrize = 0;
+															for(int i = 0; i < ids.size(); i ++){
+																long tmpid = ids.get(i);
+																int tmpCnt = counts.get(i);
+																
+																Present present = presents.get(tmpid);
+																
+																allPrize += (present.getPrize() * tmpCnt);
+																presentCnts.put(present, tmpCnt);
+															}
+															
+															if(allPrize <= user.getCurrentPrize()){
+																if(presentBiz.exchangeExpress(user, presentCnts, cellPhone, address, name))
+																	result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+																else {
+																	result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_NOTENOUGHT_PRIZE);
+																	result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_NOTENOUGHT_PRIZE));
+																}
+															} else{
+																result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_NOTENOUGHT_PRIZE);
+																result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_NOTENOUGHT_PRIZE));
+															}
+														} else{
+															result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID);
+															result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID));
+														}
+													}
+												} else{
+													result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_USERID);
+													result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_USERID));
+												}
+											} else{
+												result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_NAME);
+												result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_NAME));
+											}
+										} else{
+											result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ADDRESS);
+											result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ADDRESS));
+										}
+									} else{
+										result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_CELLPHONE);
+										result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_CELLPHONE));
+									}
+								} else{
+									result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_COUNT);
+									result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_COUNT));
+								}
+							} else{
+								result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_COUNT);
+								result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_COUNT));
+							}
+						} else{
+							result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID);
+							result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID));
+						}
+					} else{
+						result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID);
+						result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_PRESENT_ID));
+					}
+				} else{
+					result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_USERID);
+					result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_EXCHANGE_USERID));
+				}
+			} else
+				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_PARAM_ERROR);
+		} catch(Throwable t){
+			if(logger.isErrorEnabled())
+				logger.error("Exception in exchangePresents", t);
+			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
+		}
+		
+		return result;
+	}
 
 	@AjaxMethod(path = "sendsms.ajax")
 	public Map<Object, Object> sendSMS(Map<String, String> params) {

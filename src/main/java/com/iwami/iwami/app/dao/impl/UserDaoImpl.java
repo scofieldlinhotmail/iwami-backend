@@ -132,6 +132,13 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 		getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize + ? where id = ?", new Object[]{prize, userid});
 	}
 
+	@Override
+	public boolean updateUser4ExpressExchange(long userid, int allPrize, long cellPhone, String address, String name) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ?, last_address = ?, last_cell_phone_2 = ?, last_name = ?, lastmod_time = now(), lastmod_userid = ? where id = ? and current_prize >= ? and isdel = ?",
+				new Object[]{allPrize, allPrize, address, cellPhone, name, userid, userid, allPrize, 0});
+		return count > 0;
+	}
+
 }
 
 class UserRowMapper implements RowMapper<User>{

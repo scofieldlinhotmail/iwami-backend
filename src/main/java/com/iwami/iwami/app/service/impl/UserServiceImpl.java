@@ -48,7 +48,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class, value="txManager")
 	public boolean updateUser4Register(User user) {
 		if(userDao.updateUser4Register(user))
 			return true;
@@ -64,6 +63,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void addUserCurrentPrize(long userid, int prize) {
 		userDao.addUserCurrentPrize(userid, prize);
+	}
+
+	@Override
+	public boolean updateUser4ExpressExchange(long userid, int allPrize, long cellPhone, String address, String name) {
+		return userDao.updateUser4ExpressExchange(userid, allPrize, cellPhone, address, name);
 	}
 
 	public UserDao getUserDao() {
