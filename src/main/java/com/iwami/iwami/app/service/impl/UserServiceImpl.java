@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean subUserCurrentPrize(long userid, int prize) {
-		return userDao.subUserCurrentPrize(userid, prize);
+	public boolean subUserCurrentNExchangePrize(long userid, int prize) {
+		return userDao.subUserCurrentNExchangePrize(userid, prize);
 	}
 
 	@Override
@@ -68,6 +68,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean updateUser4ExpressExchange(long userid, int allPrize, long cellPhone, String address, String name) {
 		return userDao.updateUser4ExpressExchange(userid, allPrize, cellPhone, address, name);
+	}
+
+	@Override
+	public boolean updateUser4AlipayExchange(long id, int prize, String aliAccount) {
+		return userDao.updateUser4AlipayExchange(id, prize, aliAccount);
+	}
+
+	@Override
+	public boolean updateUser4BankExchange(long id, int prize, String bankAccount, String bankName, long bankNo) {
+		return userDao.updateUser4BankExchange(id, prize, bankAccount, bankName, bankNo);
+	}
+
+	@Override
+	public boolean updateUser4MobileExchange(long id, int prize, long cellPhone) {
+		return userDao.updateUser4MobileExchange(id, prize, cellPhone);
+	}
+
+	@Override
+	public boolean updateUser4OfflineExchange(long id, int prize) {
+		return userDao.updateUser4OfflineExchange(id, prize);
 	}
 
 	public UserDao getUserDao() {

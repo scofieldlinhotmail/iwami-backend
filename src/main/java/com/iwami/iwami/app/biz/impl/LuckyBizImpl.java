@@ -4,17 +4,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.iwami.iwami.app.biz.LuckyBiz;
 import com.iwami.iwami.app.comparator.LuckyRuleComparator;
 import com.iwami.iwami.app.exception.LuckyExceedLimitException;
 import com.iwami.iwami.app.exception.NotEnoughPrizeException;
+import com.iwami.iwami.app.model.Exchange;
 import com.iwami.iwami.app.model.LuckyConfig;
-import com.iwami.iwami.app.model.LuckyHistory;
 import com.iwami.iwami.app.model.LuckyRule;
+import com.iwami.iwami.app.model.Present;
 import com.iwami.iwami.app.model.User;
 import com.iwami.iwami.app.service.LuckyService;
+import com.iwami.iwami.app.service.PresentService;
 import com.iwami.iwami.app.service.UserService;
 import com.iwami.iwami.app.util.IWamiUtils;
 
@@ -23,6 +23,8 @@ public class LuckyBizImpl implements LuckyBiz {
 	private LuckyService luckyService;
 	
 	private UserService userService;
+	
+	private PresentService presentService;
 
 	@Override
 	public List<LuckyRule> getLuckyRules() {
@@ -38,8 +40,7 @@ public class LuckyBizImpl implements LuckyBiz {
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class, value="txManager")
-	public LuckyHistory draw(User user, LuckyConfig config) throws LuckyExceedLimitException, NotEnoughPrizeException {
+	public LuckyRule draw(User user, LuckyConfig config) throws LuckyExceedLimitException, NotEnoughPrizeException {
 		/*if(config.getCount() >= 0){
 			int count = luckyService.getLuckyCountByUserid(user.getId());
 			if(count >= config.getCount())
@@ -59,28 +60,38 @@ public class LuckyBizImpl implements LuckyBiz {
 				frule = rule;
 		}
 		
-		// substract from user.current_price
-		if(userService.subUserCurrentPrize(user.getId(), config.getPrize())){
-			LuckyHistory history = new LuckyHistory();
-			history.setUserid(user.getId());
-			history.setUsername(user.getName());
-			history.setCellPhone(user.getCellPhone());
-			history.setDrawPrize(config.getPrize());
-			history.setDrawid(-1);
-			history.setDrawLevel(-1);
-			history.setGift("未中奖");
-			if(frule != null && luckyService.getLuckyDrawCount(frule.getId(), IWamiUtils.getTodayStart()) < frule.getCount()){
-				history.setDrawid(frule.getId());
-				history.setGift(frule.getGift());
-				history.setDrawLevel(frule.getIndexLevel());
-			}
-			
-			if(luckyService.addLuckyHistory(history))
-				return history;
-			else
-				throw new RuntimeException("insert luck history failed...");
+		Exchange exchange = new Exchange();
+		exchange.setUserid(user.getId());
+		exchange.setPresentId(-1);
+		exchange.setPresentPrize(-1);
+		exchange.setPresentName("未中奖");
+		exchange.setPresentType(Present.TYPE_LUCK);
+		exchange.setCount(1);
+		exchange.setPrize(config.getPrize());
+		exchange.setStatus(Exchange.STATUS_NEW);
+		if(frule != null && presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) <= frule.getCount()){
+			exchange.setPresentId(frule.getId());
+			exchange.setPresentName(frule.getGift());
+			exchange.setPresentPrize(frule.getIndexLevel());
 		} else
+			frule = null;
+		
+		long presentId = presentService.addExchange(exchange);
+		
+		int status = Exchange.STATUS_FAILED;
+		
+		// substract from user.current_price
+		boolean result = userService.subUserCurrentNExchangePrize(user.getId(), config.getPrize());
+		
+		if(result)
+			status = Exchange.STATUS_READY;
+		
+		presentService.updateExchangeStatus(presentId, status);
+		
+		if(!result)
 			throw new NotEnoughPrizeException();
+		else
+			return frule;
 	}
 
 	public LuckyService getLuckyService() {
@@ -97,6 +108,14 @@ public class LuckyBizImpl implements LuckyBiz {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public PresentService getPresentService() {
+		return presentService;
+	}
+
+	public void setPresentService(PresentService presentService) {
+		this.presentService = presentService;
 	}
 
 }

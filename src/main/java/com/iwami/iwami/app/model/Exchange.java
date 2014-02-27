@@ -40,6 +40,8 @@ public class Exchange {
 	
 	private String bankAccount;
 	
+	private long bankNo;
+	
 	private String bankName;
 	
 	private String address;
@@ -49,6 +51,10 @@ public class Exchange {
 	private String expressName;
 	
 	private String expressNo;
+	
+	private String channel;
+	
+	private Date addTime;
 	
 	private Date lastModTime;
 	
@@ -142,14 +148,6 @@ public class Exchange {
 		this.alipayAccount = alipayAccount;
 	}
 
-	public String getBankAccount() {
-		return bankAccount;
-	}
-
-	public void setBankAccount(String bankAccount) {
-		this.bankAccount = bankAccount;
-	}
-
 	public String getBankName() {
 		return bankName;
 	}
@@ -219,6 +217,38 @@ public class Exchange {
 
 	public void setExpressNo(String expressNo) {
 		this.expressNo = expressNo;
+	}
+
+	public String getBankAccount() {
+		return bankAccount;
+	}
+
+	public void setBankAccount(String bankAccount) {
+		this.bankAccount = bankAccount;
+	}
+
+	public long getBankNo() {
+		return bankNo;
+	}
+
+	public void setBankNo(long bankNo) {
+		this.bankNo = bankNo;
+	}
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 	
 }

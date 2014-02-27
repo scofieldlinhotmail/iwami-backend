@@ -454,13 +454,14 @@
 			  	100202： 验证码发送过于频繁
 			  	100203: 用户id不存在
 			  	100204: 不能邀请自己
+			  	100205: 被邀请用户已经注册
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 
 	后端逻辑: 调用短信接口发送验证码
 
 15、礼品兑换历史接口
- 	接口名字：gift/history.ajax
+ 	接口名字：exchange/history.ajax
 	输入参数：userid: int 用户id
 	输出参数：status：int值  
 			  	0: 返回成功
@@ -475,9 +476,9 @@
 			   			list：[
 			   				{
 				   				time:  -- long 时间
-					   			type：int 0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下
+					   			type：int 0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下, 5抽奖, 6赠送
 					   			express：快递单号
-					   			status：未发货，已发货，现场兑换
+					   			status：0 未发货，1已发货，2现场兑换
 					   			gifts：	[
 						   				{
 						   					name: String 礼品名字
@@ -497,7 +498,7 @@
 			  同一快递号放在一起
 
 16.1、礼品兑换线上快递接口
- 	接口名字：gift/express.ajax
+ 	接口名字：exchange/express.ajax
 	输入参数：userid: int 用户id
 			  ids: String 礼物id列表,用“,”分隔
 			  counts: String 礼物数量必须和ids对应,用“,”分隔
@@ -527,18 +528,12 @@
 			     7> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
 			  (3)上述必须在同一个事务里
 
-16、礼品兑换接口
- 	接口名字：gift/exchange.ajax
+16.2、礼品兑换支付宝提现接口
+ 	接口名字：exchange/alipay.ajax
 	输入参数：userid: int 用户id
-			  ids: String 礼物id列表,用“,”分隔
-			  count: String 礼物数量必须和ids对应,用“,”分隔，线上快递时必须有值，线上充值/提现可以设置任意值
-			  cellPhone: long 手机号(当礼物有手机充值和快递时，必须有值）
-			  aliAccount: String 支付宝提现账号(当礼物有支付宝取现，必须有值）
+			  id: String 礼物id
+			  aliAccount: String 支付宝提现账号
 			  prize: int 支付宝和银行卡提现的米粒数量(当礼物有支付宝和银行卡取现，必须有值）
-			  address: String 邮寄地址(当礼物有快递时，必须有值）
-			  name: String 姓名（当有银行转账和快递时，必须有值）
-			  bankName: String 开户行（当有银行转账时，必须有值）
-			  bankAccount: long 银行卡号（当有银行转账时，必须有值）
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
@@ -554,6 +549,8 @@
 			  	100179: 姓名不能为空
 			  	1001710: 开户行不能为空
 			  	1001711: 银行卡号不能为空
+			  	1001712: 提现的米粒数必须大于最小提现值
+			  	1001713: 提现的米粒数必须是兑换比例的整数倍
 			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
 			   msg: 具体错误信息
 	后端逻辑: (1)必须批量插入exchange表
@@ -565,6 +562,103 @@
 			     5> 如有银行转账，则将名字、开户行、银行卡号更新到user表的last_name、last_bank_name、last_bank_account字段
 			     7> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
 			  (3)上述必须在同一个事务里
+
+16.3、礼品兑换银行卡提现接口
+ 	接口名字：exchange/bank.ajax
+	输入参数：userid: int 用户id
+			  id: String 礼物id
+			  bankAccount: String 姓名
+			  bankName: String 开户行
+			  bankNo: long 银行卡号
+			  prize: int 支付宝和银行卡提现的米粒数量(当礼物有支付宝和银行卡取现，必须有值）
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100171: 用户名不存在
+			  	100172: 礼物不存在
+			  	100173: 数量必须大于0
+			  	100174: 米粒数不足
+			  	100175: 手机号不能为空
+			  	100176: 支付宝不能为空
+			  	100177: 提现的米粒数必须大于0
+			  	100178: 地址不能为空
+			  	100179: 姓名不能为空
+			  	1001710: 开户行不能为空
+			  	1001711: 银行卡号不能为空
+			  	1001712: 提现的米粒数必须小于最小提现值
+			  	1001713: 提现的米粒数必须是兑换比例的整数倍
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+	后端逻辑: (1)必须批量插入exchange表
+			  (2)从user表current_prize减去米粒数，exchange加上米粒数
+			     1> update语句的时候必须加where条件: 当前用户的current_prize大于等于减去的米粒数
+			     2> 如果有手机充值礼品，将手机号更新到user表的last_cell_phone_1字段
+			  	 3> 如果有支付宝提现，则将支付宝账号、提现的米粒数量更新到user表的last_alipay_account、exchange_prize字段
+			     4> 如有快递，则将邮寄地址、手机号、名字更新到user表的last_address、last_cell_phone_2、last_name字段
+			     5> 如有银行转账，则将名字、开户行、银行卡号更新到user表的last_name、last_bank_name、last_bank_account字段
+			     7> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
+			  (3)上述必须在同一个事务里
+
+16.4、礼品兑换手机充值卡接口
+ 	接口名字：exchange/mobile.ajax
+	输入参数：userid: int 用户id
+			  id: String 礼物id
+			  cellPhone: long 手机号(当礼物有手机充值和快递时，必须有值）
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100171: 用户名不存在
+			  	100172: 礼物不存在
+			  	100173: 数量必须大于0
+			  	100174: 米粒数不足
+			  	100175: 手机号不能为空
+			  	100176: 支付宝不能为空
+			  	100177: 提现的米粒数必须大于0
+			  	100178: 地址不能为空
+			  	100179: 姓名不能为空
+			  	1001710: 开户行不能为空
+			  	1001711: 银行卡号不能为空
+			  	1001712: 提现的米粒数必须小于最小提现值
+			  	1001713: 提现的米粒数必须是兑换比例的整数倍
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+	后端逻辑: (1)必须批量插入exchange表
+			  (2)从user表current_prize减去米粒数，exchange加上米粒数
+			     1> update语句的时候必须加where条件: 当前用户的current_prize大于等于减去的米粒数
+			     2> 如果有手机充值礼品，将手机号更新到user表的last_cell_phone_1字段
+			  	 3> 如果有支付宝提现，则将支付宝账号、提现的米粒数量更新到user表的last_alipay_account、exchange_prize字段
+			     4> 如有快递，则将邮寄地址、手机号、名字更新到user表的last_address、last_cell_phone_2、last_name字段
+			     5> 如有银行转账，则将名字、开户行、银行卡号更新到user表的last_name、last_bank_name、last_bank_account字段
+			     7> 如update返回影响行数为0，则更新第一条status值为1，返回100143错误，并回滚事务
+			  (3)上述必须在同一个事务里
+
+16.5、礼品兑换线下接口
+ 	接口名字：exchange/offline.ajax
+	输入参数：userid: int 用户id
+			  ids: String 礼物id列表,用“,”分隔
+			  counts: String 礼物数量必须和ids对应,用“,”分隔
+	输出参数：status：int值  
+			  	0: 返回成功
+			  	300： 缺少参数
+			  	400： 后端错误
+			  	100171: 用户名不存在
+			  	100172: 礼物不存在
+			  	100173: 数量必须大于0
+			  	100174: 米粒数不足
+			  	100175: 手机号不能为空
+			  	100176: 支付宝不能为空
+			  	100177: 提现的米粒数必须大于0
+			  	100178: 地址不能为空
+			  	100179: 姓名不能为空
+			  	1001710: 开户行不能为空
+			  	1001711: 银行卡号不能为空
+			  	1001712: 提现的米粒数必须小于最小提现值
+			  	1001713: 提现的米粒数必须是兑换比例的整数倍
+			  	其他：具体某种类型错误，此时需要读取msg错误信息（提示用户）
+			   msg: 具体错误信息
+
 			  
 17、兑换分享记录接口
 	接口名字：share.ajax
@@ -749,7 +843,8 @@
    		  		exchangePrize: int 用户已经兑换米粒数目
    		  		lastCellPhone1: long 上次充值手机号
    		  		lastAlipayAccount： String 上次支付宝账号
-   		  		lastBankAccount: long 上次银行账号
+   		  		lastBankAccount: String 上次银行开户姓名
+   		  		lastBankNo: long 上次银行账号
    		  		lastBankName: String 上次银行卡开户行
    		  		lastAddress: String 上次线上快递地址
    		  		lastCellPhone2: String 上次线上快递手机号

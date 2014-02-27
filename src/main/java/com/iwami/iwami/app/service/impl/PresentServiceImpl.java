@@ -1,6 +1,7 @@
 package com.iwami.iwami.app.service.impl;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,8 @@ public class PresentServiceImpl implements PresentService {
 			
 			if(presents != null && presents.size() > 0){
 				Collections.sort(presents, new PresentRankComparator());
+				for(int i = 0; i < presents.size(); i ++)
+					presents.get(i).setRank(i);
 				
 				LocalCaches.set(IWamiConstants.CACHE_PRESENT_KEY, presents, System.currentTimeMillis());
 			}
@@ -60,6 +63,16 @@ public class PresentServiceImpl implements PresentService {
 	@Override
 	public void updateExchangesStatus(List<Long> ids, int status) {
 		presentDao.updateExchangeStatus(ids, status);
+	}
+
+	@Override
+	public int getLuckyExchangeCount(long presentid, Date date) {
+		return presentDao.getLuckyExchangeCount(presentid, date);
+	}
+
+	@Override
+	public List<Exchange> getAllExchanges(long userid) {
+		return presentDao.getAllExchanges(userid);
 	}
 
 	public long getExpireTime() {

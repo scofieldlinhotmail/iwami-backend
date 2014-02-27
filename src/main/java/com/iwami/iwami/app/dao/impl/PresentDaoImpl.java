@@ -28,7 +28,7 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 
 	@Override
 	public List<Present> getAllPresents() {
-		return getJdbcTemplate().query("select id, name, prize, `count`, rank, type, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_PRESENT + " where isdel = ? and type not in (" + Present.TYPE_OFFLINE + Present.TYPE_LUCK + ")", new Object[]{0}, new PresentRowMapper());
+		return getJdbcTemplate().query("select id, name, prize, `count`, rank, type, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_PRESENT + " where isdel = ? and type <> ?", new Object[]{0, Present.TYPE_OFFLINE}, new PresentRowMapper());
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_name, address, name, express_name, express_no, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_no, bank_name, address, name, express_name, express_no, channel, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				ps.setObject(1, exchange.getUserid());
 				ps.setObject(2, exchange.getPresentId());
 				ps.setObject(3, exchange.getPresentName());
@@ -50,13 +50,15 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 				ps.setObject(9, exchange.getCellPhone());
 				ps.setObject(10, exchange.getAlipayAccount());
 				ps.setObject(11, exchange.getBankAccount());
-				ps.setObject(12, exchange.getBankName());
-				ps.setObject(13, exchange.getAddress());
-				ps.setObject(14, exchange.getName());
-				ps.setObject(15, exchange.getExpressName());
-				ps.setObject(15, exchange.getExpressNo());
-				ps.setObject(16, exchange.getLastModUserid());
-				ps.setObject(17, 0);
+				ps.setObject(12, exchange.getBankNo());
+				ps.setObject(13, exchange.getBankName());
+				ps.setObject(14, exchange.getAddress());
+				ps.setObject(15, exchange.getName());
+				ps.setObject(16, exchange.getExpressName());
+				ps.setObject(17, exchange.getExpressNo());
+				ps.setObject(18, exchange.getChannel());
+				ps.setObject(19, exchange.getLastModUserid());
+				ps.setObject(20, 0);
 				return ps;
 			}
 		}, holder);
@@ -69,17 +71,17 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 
 	@Override
 	public void updateExchangeStatus(long id, int status) {
-		getJdbcTemplate().update("update " + SqlConstants.TABLE_EXCHANGE + " set status = ? where id = ?", new Object[]{status, id});
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_EXCHANGE + " set status = ?, lastmod_time = now() where id = ?", new Object[]{status, id});
 	}
 
 	@Override
 	public void updateExchangeStatus(List<Long> ids, int status) {
-		getJdbcTemplate().update("update " + SqlConstants.TABLE_EXCHANGE + " set status = ? where id in (" + StringUtils.join(ids.toArray(), ","), new Object[]{status});
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_EXCHANGE + " set status = ?, lastmod_time = now() where id in (" + StringUtils.join(ids.toArray(), ",") + ")", new Object[]{status});
 		}
 
 	@Override
 	public boolean addShareExchange(Share share) {
-		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_SHARE + "(userid, type, target, msg, lastmod_time) valiues(?, ?, ?, ?, now())",
+		int count = getJdbcTemplate().update("insert into " + SqlConstants.TABLE_SHARE + "(userid, type, target, msg, lastmod_time) values(?, ?, ?, ?, now())",
 				new Object[]{share.getUserid(), share.getType(), share.getTarget(), share.getMsg()});
 		return count > 0;
 	}
@@ -94,6 +96,50 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 				presents.put(present.getId(), present);
 		
 		return presents;
+	}
+
+	@Override
+	public int getLuckyExchangeCount(long presentid, Date date) {
+		return getJdbcTemplate().queryForInt("select count(1) from " + SqlConstants.TABLE_EXCHANGE + " where presentid = ? and add_time >= ? and present_type = ?", new Object[]{presentid, date, Present.TYPE_LUCK});
+	}
+
+	@Override
+	public List<Exchange> getAllExchanges(long userid) {
+		return getJdbcTemplate().query("select id, userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_no, bank_name, address, name, express_name, express_no, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_EXCHANGE + " where isdel = ? and userid = ? and presentid > 0 and status in (" + Exchange.STATUS_FINISH + "," + Exchange.STATUS_READY + ")", new Object[]{0, userid}, new RowMapper<Exchange>(){
+
+			@Override
+			public Exchange mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Exchange exchange = new Exchange();
+				exchange.setId(rs.getLong("id"));
+				exchange.setUserid(rs.getLong("userid"));
+				exchange.setPresentId(rs.getLong("presentid"));
+				exchange.setPresentName(rs.getString("present_name"));
+				exchange.setPresentPrize(rs.getInt("present_prize"));
+				exchange.setPresentType(rs.getInt("present_type"));
+				exchange.setCount(rs.getInt("count"));
+				exchange.setPrize(rs.getInt("prize"));
+				exchange.setStatus(rs.getInt("status"));
+				exchange.setCellPhone(rs.getLong("cell_phone"));
+				exchange.setAlipayAccount(rs.getString("alipay_account"));
+				exchange.setBankName(rs.getString("bank_name"));
+				exchange.setBankAccount(rs.getString("bank_account"));
+				exchange.setBankNo(rs.getLong("bank_no"));
+				exchange.setAddress(rs.getString("address"));
+				exchange.setName(rs.getString("name"));
+				exchange.setExpressName(rs.getString("express_name"));
+				exchange.setExpressNo(rs.getString("express_no"));
+				exchange.setChannel(rs.getString("channel"));
+				Timestamp ts = rs.getTimestamp("lastmod_time");
+				if(ts != null)
+					exchange.setLastModTime(new Date(ts.getTime()));
+				ts = rs.getTimestamp("add_time");
+				if(ts != null)
+					exchange.setAddTime(new Date(ts.getTime()));
+				exchange.setLastModUserid(rs.getLong("lastmod_userid"));
+				return exchange;
+			}
+			
+		});
 	}
 
 }

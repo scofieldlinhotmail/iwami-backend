@@ -17,7 +17,6 @@ import com.iwami.iwami.app.constants.ErrorCodeConstants;
 import com.iwami.iwami.app.exception.LuckyExceedLimitException;
 import com.iwami.iwami.app.exception.NotEnoughPrizeException;
 import com.iwami.iwami.app.model.LuckyConfig;
-import com.iwami.iwami.app.model.LuckyHistory;
 import com.iwami.iwami.app.model.LuckyRule;
 import com.iwami.iwami.app.model.User;
 
@@ -72,12 +71,12 @@ public class LuckyAjax {
 				if(user != null && user.getId() == userid){
 					LuckyConfig config = luckyBiz.getLuckyConfig();
 					if(config != null && user.getCurrentPrize() >= config.getPrize()){
-						LuckyHistory history = luckyBiz.draw(user, config);
+						LuckyRule rule = luckyBiz.draw(user, config);
 						
 						Map<String, Object> tmp = new HashMap<String, Object>();
-						if(history != null){
-							tmp.put("level", history.getDrawLevel());
-							tmp.put("gift", history.getGift());
+						if(rule != null){
+							tmp.put("level", rule.getIndexLevel());
+							tmp.put("gift", rule.getGift());
 						} else{
 							tmp.put("level", -1);
 							tmp.put("gift", "未中奖");

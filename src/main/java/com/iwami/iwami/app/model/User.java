@@ -18,9 +18,11 @@ public class User {
 	
 	private String lastAlipayAccount;
 	
-	private long lastBankAccount;
+	private String lastBankAccount;
 	
 	private String lastBankName;
+	
+	private long lastBankNo;
 	
 	private String lastAddres;
 	
@@ -87,14 +89,6 @@ public class User {
 
 	public void setLastAlipayAccount(String lastAlipayAccount) {
 		this.lastAlipayAccount = lastAlipayAccount;
-	}
-
-	public long getLastBankAccount() {
-		return lastBankAccount;
-	}
-
-	public void setLastBankAccount(long lastBankAccount) {
-		this.lastBankAccount = lastBankAccount;
 	}
 
 	public String getLastBankName() {
@@ -222,5 +216,21 @@ public class User {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	public long getLastBankNo() {
+		return lastBankNo;
+	}
+
+	public void setLastBankNo(long lastBankNo) {
+		this.lastBankNo = lastBankNo;
+	}
+
+	public void setLastBankAccount(String lastBankAccount) {
+		this.lastBankAccount = lastBankAccount;
+	}
+
+	public String getLastBankAccount() {
+		return lastBankAccount;
 	}
 }

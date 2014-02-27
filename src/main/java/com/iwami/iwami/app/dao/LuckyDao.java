@@ -1,10 +1,8 @@
 package com.iwami.iwami.app.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import com.iwami.iwami.app.model.LuckyConfig;
-import com.iwami.iwami.app.model.LuckyHistory;
 import com.iwami.iwami.app.model.LuckyRule;
 
 public interface LuckyDao {
@@ -16,12 +14,4 @@ public interface LuckyDao {
 	public boolean addLuckyRule(LuckyRule rule);
 	
 	public LuckyConfig getLuckyConfig();
-
-	public boolean addLuckyHistory(LuckyHistory history);
-	
-	public List<LuckyHistory> getAllLuckyHistory();
-	
-	public int getLuckyCountByUserid(long userid);
-
-	public int getLuckyDrawCount(long drawid, Date start);
 }

@@ -71,6 +71,10 @@
 	<bean name="taskAjax" class="com.iwami.iwami.app.ajax.TaskAjax">
 		<property name="taskBiz" ref="taskBiz"></property>
 	</bean>
+	<bean name="presentAjax" class="com.iwami.iwami.app.ajax.PresentAjax">
+		<property name="presentBiz" ref="presentBiz"></property>
+		<property name="userBiz" ref="userBiz" />
+	</bean>
 	
 	<!-- biz -->
 	<bean name="onstartBiz" class="com.iwami.iwami.app.biz.impl.OnstartBizImpl">
@@ -89,6 +93,7 @@
 	<bean name="luckyBiz" class="com.iwami.iwami.app.biz.impl.LuckyBizImpl">
 		<property name="luckyService" ref="luckyService" />
 		<property name="userService" ref="userService" />
+		<property name="presentService" ref="presentService" />
 	</bean>
 	<bean name="userBiz" class="com.iwami.iwami.app.biz.impl.UserBizImpl">
 		<property name="userService" ref="userService" />
@@ -110,6 +115,10 @@
 	<bean name="taskBiz" class="com.iwami.iwami.app.biz.impl.TaskBizImpl">
 		<property name="taskService" ref="taskService" />
 		<property name="wamiService" ref="wamiService" />
+	</bean>
+	<bean name="presentBiz" class="com.iwami.iwami.app.biz.impl.PresentBizImpl">
+		<property name="presentService" ref="presentService" />
+		<property name="userService" ref="userService" />
 	</bean>
 	
 	<!-- service -->
@@ -144,6 +153,10 @@
 	</bean>
 	<bean name="taskService" class="com.iwami.iwami.app.service.impl.TaskServiceImpl">
 		<property name="taskDao" ref="taskDao" />
+		<property name="expireTime" ref="expireTime" />
+	</bean>
+	<bean name="presentService" class="com.iwami.iwami.app.service.impl.PresentServiceImpl">
+		<property name="presentDao" ref="presentDao" />
 		<property name="expireTime" ref="expireTime" />
 	</bean>
 	

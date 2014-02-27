@@ -23,7 +23,7 @@ public class LuckyAjaxTest extends TestCase {
 	}
 	
 	public void testDraw(){
-		if(flag){
+		if(true){
 			LuckyAjax ajax = getAjax();
 			Map<String, String> params = new HashMap<String, String>();
 			System.out.println(ajax.draw(params));

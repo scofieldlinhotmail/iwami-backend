@@ -1,5 +1,6 @@
 package com.iwami.iwami.app.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +21,8 @@ public interface PresentService {
 	public Map<Long, Present> getPresentsByIds(List<Long> ids);
 
 	public void updateExchangesStatus(List<Long> ids, int status);
+
+	public int getLuckyExchangeCount(long presentid, Date todayStart);
+
+	public List<Exchange> getAllExchanges(long userid);
 }

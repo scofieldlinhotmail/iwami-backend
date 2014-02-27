@@ -24,7 +24,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	@Override
 	public User getUserById(long id) {
 		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
-				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
+				+ "last_bank_name, last_bank_no, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
 				+ SqlConstants.TABLE_USER + " a join " + SqlConstants.TABLE_USERINFO + " b on a.id = b.userid where a.id = ? and a.isdel = 0 and b.isdel = 0", new Object[]{id}, new UserRowMapper());
 		if(users != null && users.size() > 0)
 			return users.get(0);
@@ -35,7 +35,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	@Override
 	public User getUserByCellPhone(long cellPhone) {
 		List<User> users = getJdbcTemplate().query("select id, current_prize, exchange_prize, last_cell_phone_1, last_alipay_account, last_bank_account, "
-				+ "last_bank_name, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
+				+ "last_bank_name, last_bank_no, last_address, last_cell_phone_2, last_name, name, uuid, alias, cell_phone, age, gender, job, address from " 
 				+ SqlConstants.TABLE_USER + " a join " + SqlConstants.TABLE_USERINFO + " b on a.id = b.userid where b.cell_phone = ? and a.isdel = 0 and b.isdel = 0", new Object[]{cellPhone}, new UserRowMapper());
 		if(users != null && users.size() > 0)
 			return users.get(0);
@@ -88,8 +88,8 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 	}
 
 	@Override
-	public boolean subUserCurrentPrize(long userid, int prize) {
-		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ? where id = ? and current_prize >= ? and isdel = 0", new Object[]{prize, userid, prize});
+	public boolean subUserCurrentNExchangePrize(long userid, int prize) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ? where id = ? and current_prize >= ? and isdel = 0", new Object[]{prize, prize, userid, prize});
 		if(count > 0)
 			return true;
 		else
@@ -139,6 +139,34 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 		return count > 0;
 	}
 
+	@Override
+	public boolean updateUser4AlipayExchange(long id, int prize, String aliAccount) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ?, last_alipay_account = ?, lastmod_time = now(), lastmod_userid = ? where id = ? and current_prize >= ? and isdel = ?",
+				new Object[]{prize, prize, aliAccount, id, id, prize, 0});
+		return count > 0;
+	}
+
+	@Override
+	public boolean updateUser4BankExchange(long id, int prize, String bankAccount, String bankName, long bankNo) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ?, last_bank_account = ?, last_bank_name = ?, last_bank_no = ?, lastmod_time = now(), lastmod_userid = ? where id = ? and current_prize >= ? and isdel = ?",
+				new Object[]{prize, prize, bankAccount, bankName, bankNo, id, id, prize, 0});
+		return count > 0;
+	}
+
+	@Override
+	public boolean updateUser4MobileExchange(long id, int prize, long cellPhone) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ?, last_cell_phone_1 = ?, lastmod_time = now(), lastmod_userid = ? where id = ? and current_prize >= ? and isdel = ?",
+				new Object[]{prize, prize, cellPhone, id, id, prize, 0});
+		return count > 0;
+	}
+
+	@Override
+	public boolean updateUser4OfflineExchange(long id, int prize) {
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ?, lastmod_time = now(), lastmod_userid = ? where id = ? and current_prize >= ? and isdel = ?",
+				new Object[]{prize, prize, id, id, prize, 0});
+		return count > 0;
+	}
+
 }
 
 class UserRowMapper implements RowMapper<User>{
@@ -156,7 +184,8 @@ class UserRowMapper implements RowMapper<User>{
 		user.setJob(rs.getString("job"));
 		user.setLastAddres(rs.getString("last_address"));
 		user.setLastAlipayAccount(rs.getString("last_alipay_account"));
-		user.setLastBankAccount(rs.getLong("last_bank_account"));
+		user.setLastBankAccount(rs.getString("last_bank_account"));
+		user.setLastBankNo(rs.getLong("last_bank_no"));
 		user.setLastBankName(rs.getString("last_bank_name"));
 		user.setLastCellPhone1(rs.getLong("last_cell_phone_1"));
 		user.setLastCellPhone2(rs.getLong("last_cell_phone_2"));

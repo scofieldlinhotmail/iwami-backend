@@ -38,21 +38,22 @@ public class UserAjax {
 			if(user != null){
 				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 				result.put("userid", user.getId());
-				result.put("username", user.getName());
-				result.put("uuid", user.getUuid());
-				result.put("cellPhone", user.getCellPhone());
+				result.put("username", StringUtils.trimToEmpty(user.getName()));
+				result.put("uuid", StringUtils.trimToEmpty(user.getUuid()));
+				result.put("cellPhone", toStringL(user.getCellPhone()));
 				result.put("age", user.getAge());
-				result.put("job", user.getJob());
-				result.put("address", user.getAddress());
+				result.put("job", StringUtils.trimToEmpty(user.getJob()));
+				result.put("address", StringUtils.trimToEmpty(user.getAddress()));
 				result.put("currentPrize", user.getCurrentPrize());
 				result.put("exchangePrize", user.getExchangePrize());
-				result.put("lastCellPhone1", user.getLastCellPhone1());
-				result.put("lastAlipayAccount", user.getLastAlipayAccount());
-				result.put("lastBankAccount", user.getLastBankAccount());
-				result.put("lastBankName", user.getLastBankName());
-				result.put("lastAddress", user.getLastAddres());
-				result.put("lastCellPhone2", user.getLastCellPhone2());
-				result.put("lastName", user.getLastName());
+				result.put("lastCellPhone1", toStringL(user.getLastCellPhone1()));
+				result.put("lastAlipayAccount", StringUtils.trimToEmpty(user.getLastAlipayAccount()));
+				result.put("lastBankAccount", StringUtils.trimToEmpty(user.getLastBankAccount()));
+				result.put("lastBankNo", toStringL(user.getLastBankNo()));
+				result.put("lastBankName", StringUtils.trimToEmpty(user.getLastBankName()));
+				result.put("lastAddress", StringUtils.trimToEmpty(user.getLastAddres()));
+				result.put("lastCellPhone2", toStringL(user.getLastCellPhone2()));
+				result.put("lastName", StringUtils.trimToEmpty(user.getLastName()));
 			} else{
 				result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_USERINFO_USERID);
 				result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_USERINFO_USERID));
@@ -65,6 +66,12 @@ public class UserAjax {
 		
 		
 		return result;
+	}
+
+	private String toStringL(long cellPhone) {
+		if(cellPhone > 0)
+			return "" + cellPhone;
+		return StringUtils.EMPTY;
 	}
 
 	@AjaxMethod(path = "sendverifycode.ajax")
