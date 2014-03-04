@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.iwami.iwami.app.biz.StrategyBiz;
+import com.iwami.iwami.app.common.dispatch.AjaxClass;
 import com.iwami.iwami.app.common.dispatch.AjaxMethod;
 import com.iwami.iwami.app.constants.ErrorCodeConstants;
 import com.iwami.iwami.app.exception.DuplicateRateStrategyInfoException;
@@ -19,6 +20,7 @@ import com.iwami.iwami.app.model.StrategyImage;
 import com.iwami.iwami.app.model.StrategyInfo;
 import com.iwami.iwami.app.model.StrategyRate;
 
+@AjaxClass
 public class StrategyAjax {
 	
 	private Log logger = LogFactory.getLog(getClass());

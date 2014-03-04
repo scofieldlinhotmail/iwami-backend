@@ -89,7 +89,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public boolean subUserCurrentNExchangePrize(long userid, int prize) {
-		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ? where id = ? and current_prize >= ? and isdel = 0", new Object[]{prize, prize, userid, prize});
+		int count = getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize - ?, exchange_prize = exchange_prize + ? where id = ? and current_prize >= ?, lastmod_time = now(), lastmod_userid = ? and isdel = 0", new Object[]{prize, prize, userid, userid, prize});
 		if(count > 0)
 			return true;
 		else
@@ -129,7 +129,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
 
 	@Override
 	public void addUserCurrentPrize(long userid, int prize) {
-		getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize + ? where id = ?", new Object[]{prize, userid});
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_USER + " set current_prize = current_prize + ?, lastmod_time = now(), lastmod_userid = ? where id = ?", new Object[]{prize, userid, userid});
 	}
 
 	@Override
