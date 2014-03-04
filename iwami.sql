@@ -7,7 +7,7 @@ create database `iwami`;
 use iwami;
 
 -- app启动表
-create table  onstart (
+create table onstart (
 	userid bigint(20) not null default -1 comment "用户id",
 	cell_phone bigint(20) not null default -1 comment "手机号",
 	uuid varchar(50) not null comment "设备id",
@@ -24,10 +24,10 @@ create table  onstart (
 create table  strategy_images (
 	id bigint(20) not null auto_increment  comment "自增id",
 	rank int(10)  not null comment  "顺序",
-	icon_url varchar(255) not null  comment "焦点图",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
+	icon_url varchar(1024) not null  comment "焦点图",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -38,11 +38,11 @@ create table  strategy_list (
 	subname varchar(255) not null comment "子标题",
 	intr varchar(255) comment "简介",
 	rank int(10)  not null comment  "顺序",
-	icon_small varchar(255) not null  comment "Icon小图",
-	icon_big varchar(255) not null  comment "Icon大图",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
+	icon_small varchar(1024) not null  comment "Icon小图",
+	icon_big varchar(1024) not null  comment "Icon大图",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -76,10 +76,10 @@ create table  strategy_info (
 	rank int(10)  not null comment  "顺序",
 	title varchar(255) not null comment "关数",
 	content varchar(2048) not null comment "评论内容",
-	url varchar(255) not null  comment "评论图片",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "是否删除",
+	url varchar(1024) not null  comment "评论图片",
 	primary key(id),
 	index siid (strategy_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -116,12 +116,13 @@ create table task (
 	end_time datetime comment "结束时间",
 	current_prize int(10) not null default 0 comment "当前已抢米粒数",
 	max_prize int(10) not null default -1 comment "最大可抢米粒数",
-	icon_gray  varchar(255)  comment "灰色图片",
-	icon_small varchar(255)  comment "Icon小图",
-	icon_big varchar(255)  comment "Icon大图",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
+	icon_gray  varchar(1024)  comment "灰色图片",
+	icon_small varchar(1024)  comment "Icon小图",
+	url varchar(1024) comment "APK url",
+	icon_big varchar(1024)  comment "Icon大图",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -152,11 +153,11 @@ create table present (
 	count int(10) not null default -1 comment "最低提现米粒",
 	rank int(10)  not null comment  "顺序",
 	type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下, 5抽奖",
-	icon_small varchar(255) not null  comment "Icon小图",
-	icon_big varchar(255)  comment "Icon大图",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
+	icon_small varchar(1024) not null  comment "Icon小图",
+	icon_big varchar(1024)  comment "Icon大图",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

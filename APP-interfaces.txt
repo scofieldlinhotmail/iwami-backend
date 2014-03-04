@@ -86,17 +86,15 @@
 			   	 	id: int类型  金榜任务id 
 			   	 	name: String类型  app名字
 			   	 	rank: int类型   顺序
-			   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 			   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 			   	 	available: int  是否抢光: 0未抢光，1抢光
 			   	 	background: int 是否后台运行: 0不需要,1需要
 			   	 	register: int 是否需要注册: 0不需要,1需要
 			   	 	time: int 运行时间（单位：秒）
-			   	 	star: int 星级数
 			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
-			   	 	reputation：int 好评数
 			   	 	iconSmall: String Icon小图
 						iconBig: String Icon大图
 
@@ -106,17 +104,15 @@
 			   	 	id: int类型  金榜任务id 
 			   	 	name: String类型  app名字
 			   	 	rank: int类型   顺序
-			   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 			   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 			   	 	available: int  是否抢光: 0未抢光，1抢光
 			   	 	background: int 是否后台运行: 0不需要,1需要
 			   	 	register: int 是否需要注册: 0不需要,1需要
 			   	 	time: int 运行时间（单位：秒）
-			   	 	star: int 星级数
 			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
-			   	 	reputation：int 好评数
 			   	 	iconSmall: String Icon小图
 						iconBig: String Icon大图
 
@@ -264,16 +260,15 @@
 			   			id: int 任务id
 			   			name: String app名字
 			   			rank: int 顺序
-				   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
 			   	 	status: int 用户执行任务状态 -1 未开始/可抢 
-				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
 
@@ -287,16 +282,15 @@
 			   			id: int 任务id
 			   			name: String app名字
 			   			rank: int 顺序
-				   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
-			   	 	status: int 用户执行任务状态 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行
-				   	 	iconGray: String Icon灰图
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
 
@@ -310,16 +304,15 @@
 			   			id: int 任务id
 			   			name: String app名字
 			   			rank: int 顺序
-				   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
-			   	 	status: int 用户执行任务状态 5关闭/任务完成
-				   	 	iconGray: String Icon灰图
+			   	 	status: int 用户执行任务状态 -1 未开始/可抢 
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
 
@@ -351,16 +344,15 @@
 			   			id: int 任务id
 			   			name: String app名字
 			   			rank: int 顺序
-				   	 	size: double  app大小（单位：KB）
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
+			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
 				   	 	register: int 是否需要注册: 0不需要,
 				   	 	time: int 运行时间（单位：秒）
 			   	 	status: int 用户执行任务状态 -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
-				   	 	iconGray: String Icon灰图
 				   	 	iconSmall: String Icon小图
 							iconBig: String Icon大图
 

@@ -36,6 +36,8 @@ public class Task {
 	
 	private int prize;
 	
+	private String url;
+	
 	private int type;
 	
 	private int background;
@@ -275,6 +277,14 @@ public class Task {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 }

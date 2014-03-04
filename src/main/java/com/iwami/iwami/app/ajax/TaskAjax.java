@@ -156,19 +156,16 @@ public class TaskAjax {
 					tmp.put("id", task.getId());
 					tmp.put("name", task.getName());
 					tmp.put("rank", task.getRank());
-					tmp.put("size", task.getSize());
 					tmp.put("intr", task.getIntr());
 					tmp.put("appintr", task.getAppIntr());
 					tmp.put("prize", task.getPrize());
+					tmp.put("url", task.getUrl());
 					tmp.put("available", task.getAvailable());
 					tmp.put("background", task.getBackground());
 					tmp.put("register", task.getRegister());
 					tmp.put("time", task.getTime());
-					tmp.put("star", task.getStar());
-					tmp.put("reputation", task.getReputation());
 					tmp.put("icomSmall", task.getIconSmall());
 					tmp.put("iconBig", task.getIconBig());
-					tmp.put("iconGray", task.getIconGray());
 					tmp.put("status", task.getStatus());
 					
 					data.add(tmp);

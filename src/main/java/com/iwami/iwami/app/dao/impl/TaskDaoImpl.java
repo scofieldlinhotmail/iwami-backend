@@ -19,7 +19,7 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 
 	@Override
 	public List<Task> getAllTasks() {
-		return getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where isdel = ?", 
+		return getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, url, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where isdel = ?", 
 				new Object[]{0}, new TaskRowMapper());
 	}
 
@@ -35,7 +35,7 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 
 	@Override
 	public Task getTaskById(long taskid) {
-		List<Task> tasks = getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id = ?", 
+		List<Task> tasks = getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, url, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id = ?", 
 				new Object[]{taskid}, new TaskRowMapper());
 		
 		if(tasks != null && tasks.size() > 0)
@@ -46,7 +46,7 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 
 	@Override
 	public List<Task> getTasksByIds(List<Long> taskIds) {
-		return getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id in (" + StringUtils.join(taskIds.toArray(), ",") + ")", new TaskRowMapper());
+		return getJdbcTemplate().query("select id, name, rank, size, intr, appintr, prize, type, background, time, register, reputation, star, start_time, end_time, current_prize, max_prize, icon_gray, url, icon_small, icon_big, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_TASK + " where id in (" + StringUtils.join(taskIds.toArray(), ",") + ")", new TaskRowMapper());
 	}
 
 	@Override
@@ -98,6 +98,7 @@ class TaskRowMapper implements RowMapper<Task>{
 			task.setEndTime(new Date(ts.getTime()));
 		task.setCurrentPrize(rs.getInt("current_prize"));
 		task.setMaxPrize(rs.getInt("max_prize"));
+		task.setUrl(rs.getString("url"));
 		task.setIconGray(rs.getString("icon_gray"));
 		task.setIconSmall(rs.getString("icon_small"));
 		task.setIconBig(rs.getString("icon_big"));
