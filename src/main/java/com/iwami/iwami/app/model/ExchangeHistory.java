@@ -18,7 +18,9 @@ public class ExchangeHistory {
 	
 	private int type;
 	
-	private String express;
+	private String expressName;
+	
+	private String expressNo;
 	
 	private int status;
 	
@@ -38,14 +40,6 @@ public class ExchangeHistory {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public String getExpress() {
-		return express;
-	}
-
-	public void setExpress(String express) {
-		this.express = express;
 	}
 
 	public int getStatus() {
@@ -77,5 +71,21 @@ public class ExchangeHistory {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getExpressName() {
+		return expressName;
+	}
+
+	public void setExpressName(String expressName) {
+		this.expressName = expressName;
+	}
+
+	public String getExpressNo() {
+		return expressNo;
+	}
+
+	public void setExpressNo(String expressNo) {
+		this.expressNo = expressNo;
 	}
 }

@@ -88,7 +88,7 @@ create table  strategy_info (
 -- 话术表
 create table  tips (
 	id bigint(20) not null auto_increment comment "自增id",
-	type tinyint(3) not null comment "话术类型：0挖米广告词,1任务抢光提示",
+	type tinyint(3) not null comment "话术类型：0挖米广告词,1没有符合要求的任务提示，2没有礼品提示，3分享内容（微博，微信，朋友圈），4短信接收手机号",
 	content varchar(255) not null comment "话术内容",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
@@ -226,9 +226,20 @@ create table user_info (
 	add_time datetime not null comment "注册时间",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
-	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
+	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示，3生效管理员，4无效管理员",
 	primary key(userid),
 	index uiid (cell_phone)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 用户信息表
+create table user_role (
+	userid bigint(20) not null comment "用户id",
+	password varchar(255) not null comment "密码",
+	role bigint(20) not null comment "权限",
+	lastmod_time datetime not null comment "上次修改时间",
+	lastmod_userid bigint(20) not null comment "上次修改人",
+	isdel tinyint(3) not null default 0 comment "0，1",
+	primary key(userid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -310,4 +321,14 @@ create table treasure_config (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 为了执行完成全部sql语句
+-- task finish sms notification
+create table task_notification(
+	id int(10) not null auto_increment comment "自增id",
+	task_id bigint(20) not null  comment "米粒任务id",
+	cell_phone bigint(20) not null default -1 comment "手机号",
+	sms varchar(255) comment "短信内容",
+	status tinyint(3) not null default 0 comment "状态：0新建，1已发短信", 
+	add_time datetime not null comment "插入时间",
+	lastmod_time datetime not null comment "上次修改时间",
+	primary key(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

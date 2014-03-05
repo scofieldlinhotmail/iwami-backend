@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,7 +27,7 @@ public class TipsAjax {
 		try {
 			int type = -1;
 			if (params.containsKey("type")) {
-				type = Integer.parseInt(params.get("type"));
+				type = NumberUtils.toInt(params.get("type"), -1);
 				if (type >= 0) {
 					Tips tips = tipsBiz.getTips(type);
 					String content = StringUtils.EMPTY;

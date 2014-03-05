@@ -77,6 +77,8 @@ public class PresentAjax {
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("time", tmp.getTime());
 					data.put("type", tmp.getType());
+					data.put("expressName", tmp.getExpressName());
+					data.put("expressNo", tmp.getExpressNo());
 					data.put("status", tmp.getStatus());
 					data.put("gifts", parseGifts(tmp.getGifts()));
 					

@@ -2,6 +2,8 @@ package com.iwami.iwami.app.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +25,9 @@ public class TipsDaoImpl extends JdbcDaoSupport implements TipsDao{
 				tips.setId(rs.getLong("id"));
 				tips.setType(rs.getInt("type"));
 				tips.setContent(rs.getString("content"));
-				tips.setLastmodTime(rs.getLong("lastmod_time"));
+				Timestamp ts = rs.getTimestamp("lastmod_time");
+				if(ts != null)
+					tips.setLastmodTime(new Date(ts.getTime()));
 				tips.setLastmodUserid(rs.getLong("lastmod_userid"));
 				return tips;
 			}

@@ -24,7 +24,7 @@ public class ContactDaoImpl extends JdbcDaoSupport implements ContactDao{
 				contact.setPhone1(rs.getString("phone1"));
 				contact.setEmail1(rs.getString("email1"));
 				contact.setDomain(rs.getString("domain"));
-				contact.setQq(rs.getLong("qq"));
+				contact.setQq(rs.getString("qq"));
 				contact.setQqgroup(rs.getString("qqgroup"));
 				contact.setPhone2(rs.getString("phone2"));
 				contact.setEmail2(rs.getString("email2"));

@@ -73,7 +73,7 @@ class StrategyInfoRowMapper implements RowMapper<StrategyInfo>{
 	@Override
 	public StrategyInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
 		StrategyInfo info = new StrategyInfo();
-		info.setId(rs.getInt("id"));
+		info.setId(rs.getLong("id"));
 		info.setStrategyId(rs.getLong("strategy_id"));
 		info.setRank(rs.getInt("rank"));
 		info.setTitle(rs.getString("title"));

@@ -164,7 +164,7 @@ public class TaskAjax {
 					tmp.put("background", task.getBackground());
 					tmp.put("register", task.getRegister());
 					tmp.put("time", task.getTime());
-					tmp.put("icomSmall", task.getIconSmall());
+					tmp.put("iconSmall", task.getIconSmall());
 					tmp.put("iconBig", task.getIconBig());
 					tmp.put("status", task.getStatus());
 					

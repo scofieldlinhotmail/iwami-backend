@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.iwami.iwami.app.biz.PresentBiz;
 import com.iwami.iwami.app.comparator.ExchangeHistoryComparator;
+import com.iwami.iwami.app.constants.IWamiConstants;
 import com.iwami.iwami.app.exception.NotEnoughPrizeException;
 import com.iwami.iwami.app.model.Exchange;
 import com.iwami.iwami.app.model.ExchangeHistory;
@@ -219,10 +220,10 @@ public class PresentBizImpl implements PresentBiz {
 	@Override
 	public List<ExchangeHistory> getExchangeHistory(long userid) {
 		List<Exchange> exchanges = presentService.getAllExchanges(userid);
-		// time - type - status - exchangehistory
+		// time - type - (expressName, expressNo) - status - exchangehistory
 		List<ExchangeHistory> result = new ArrayList<ExchangeHistory>();
 		if(exchanges != null && exchanges.size() > 0){
-			Map<Long, Map<Integer, Map<Integer, ExchangeHistory>>> tmp = new HashMap<Long, Map<Integer,Map<Integer,ExchangeHistory>>>();
+			Map<Long, Map<Integer, Map<String, Map<Integer, ExchangeHistory>>>> tmp = new HashMap<Long, Map<Integer, Map<String, Map<Integer,ExchangeHistory>>>>();
 			
 			for(Exchange exchange : exchanges)
 				if(exchange != null){
@@ -234,25 +235,31 @@ public class PresentBizImpl implements PresentBiz {
 					else if(exchange.getStatus() == Exchange.STATUS_FINISH)
 						status = ExchangeHistory.STATUS_SENT;
 					
-					Map<Integer, Map<Integer, ExchangeHistory>> tmp1 = tmp.get(time);
+					Map<Integer, Map<String, Map<Integer, ExchangeHistory>>> tmp1 = tmp.get(time);
 					if(tmp1 == null){
-						tmp1 = new HashMap<Integer, Map<Integer,ExchangeHistory>>();
+						tmp1 = new HashMap<Integer, Map<String, Map<Integer,ExchangeHistory>>>();
 						tmp.put(time, tmp1);
 					}
 					
-					Map<Integer, ExchangeHistory> tmp2 = tmp1.get(type);
+					Map<String, Map<Integer, ExchangeHistory>> tmp2 = tmp1.get(type);
 					if(tmp2 == null){
-						tmp2 = new HashMap<Integer, ExchangeHistory>();
+						tmp2 = new HashMap<String, Map<Integer,ExchangeHistory>>();
 						tmp1.put(type, tmp2);
 					}
 					
-					ExchangeHistory tmp3 = tmp2.get(status);
+					Map<Integer, ExchangeHistory> tmp22 = tmp2.get(exchange.getExpressName() + IWamiConstants.SEPARATOR_PRESENT + exchange.getExpressNo());
+					if(tmp22 == null){
+						tmp22 = new HashMap<Integer, ExchangeHistory>();
+						tmp2.put(exchange.getExpressName() + IWamiConstants.SEPARATOR_PRESENT + exchange.getExpressNo(), tmp22);
+					}
+					
+					ExchangeHistory tmp3 = tmp22.get(status);
 					if(tmp3 == null){
 						tmp3 = new ExchangeHistory();
 						tmp3.setTime(time);
 						tmp3.setType(type);
 						tmp3.setStatus(status);
-						tmp2.put(status, tmp3);
+						tmp22.put(status, tmp3);
 						result.add(tmp3);
 					}
 					
