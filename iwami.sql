@@ -234,12 +234,14 @@ create table user_info (
 -- 用户信息表
 create table user_role (
 	userid bigint(20) not null comment "用户id",
+	name varchar(255) not null comment "登陆名",
 	password varchar(255) not null comment "密码",
 	role bigint(20) not null comment "权限",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0，1",
-	primary key(userid)
+	primary key(userid),
+	unique index urname(name)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -332,3 +334,39 @@ create table task_notification(
 	lastmod_time datetime not null comment "上次修改时间",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--push
+create table push(
+	id bigint(20) not null auto_increment comment "自增id",
+	interval bigint(20) not null default 1000 comment "间隔时间，以毫秒为单位",
+	msg varchar(1024) comment "短信内容",
+	status tinyint(3) not null default 0 comment "状态：0新建，1暂停，2停止，3恢复，4推送成功，5短信发送成功", 
+	cell_phone bigint(20) not null default -1 comment "手机号",
+	add_time datetime not null comment "推送开始时间",
+	estimate_time datetime not null comment "预计结束时间",
+	lastmod_time datetime not null comment "上次修改时间",
+	lastmod_userid bigint(20) not null comment "上次修改人",
+	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
+	primary key(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table push_task(
+	id bigint(20) not null auto_increment comment "自增id",
+	push_id bigint(20) not null comment "push id",
+	userid bigint(20) not null comment "用户id",
+	alias varchar(50) not null comment "android jpush推送id",
+	status tinyint(3) not null default 0 comment "状态：0新建，1成功，2失败", 
+	add_time datetime not null comment "推送开始时间",
+	lastmod_userid bigint(20) not null comment "上次修改人",
+	index ptid (push_id),
+	primary key(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- login
+create table admin_login(
+	userid bigint(20) not null comment "用户id",
+	add_time datetime not null comment "推送开始时间",
+	index aluid (userid)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
