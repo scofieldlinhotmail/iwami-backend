@@ -69,7 +69,7 @@ public class LuckyBizImpl implements LuckyBiz {
 		exchange.setCount(1);
 		exchange.setPrize(config.getPrize());
 		exchange.setStatus(Exchange.STATUS_NEW);
-		if(frule != null && presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) <= frule.getCount()){
+		if(frule != null && (frule.getCount() <= -1 || presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) <= frule.getCount())){
 			exchange.setPresentId(frule.getId());
 			exchange.setPresentName(frule.getGift());
 			exchange.setPresentPrize(frule.getIndexLevel());

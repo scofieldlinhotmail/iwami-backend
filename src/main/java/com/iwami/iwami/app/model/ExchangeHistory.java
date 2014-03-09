@@ -10,9 +10,9 @@ public class ExchangeHistory {
 	
 	public static final int STATUS_NEW = 0;
 	
-	public static final int STATUS_SENT = 0;
+	public static final int STATUS_SENT = 1;
 	
-	public static final int STATUS_OFFLINE = 0;
+	public static final int STATUS_OFFLINE = 2;
 
 	private long time;
 	

@@ -121,8 +121,8 @@ create table task (
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	icon_gray  varchar(1024)  comment "灰色图片",
 	icon_small varchar(1024)  comment "Icon小图",
-	url varchar(1024) comment "APK url",
 	icon_big varchar(1024)  comment "Icon大图",
+	url varchar(1024) comment "APK url",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -236,7 +236,7 @@ create table user_role (
 	userid bigint(20) not null comment "用户id",
 	name varchar(255) not null comment "登陆名",
 	password varchar(255) not null comment "密码",
-	role bigint(20) not null comment "权限",
+	role bigint(20) not null comment "权限,第一位：用户管理，第二位：兑换-银行卡提现，第三位：兑换-支付宝提现，第四位：兑换-手机充值卡，第五位：兑换-线上礼品，第六位：兑换-线下礼品，第七位：兑换-抽奖，第8位：其他所有权限",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0，1",
@@ -338,12 +338,11 @@ create table task_notification(
 --push
 create table push(
 	id bigint(20) not null auto_increment comment "自增id",
-	interval bigint(20) not null default 1000 comment "间隔时间，以毫秒为单位",
+	`interval` bigint(20) not null default 1000 comment "间隔时间，以毫秒为单位",
 	msg varchar(1024) comment "短信内容",
 	status tinyint(3) not null default 0 comment "状态：0新建，1暂停，2停止，3恢复，4推送成功，5短信发送成功", 
-	cell_phone bigint(20) not null default -1 comment "手机号",
+	cell_phone varchar(255) not null comment "手机号",
 	add_time datetime not null comment "推送开始时间",
-	estimate_time datetime not null comment "预计结束时间",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
@@ -357,6 +356,7 @@ create table push_task(
 	alias varchar(50) not null comment "android jpush推送id",
 	status tinyint(3) not null default 0 comment "状态：0新建，1成功，2失败", 
 	add_time datetime not null comment "推送开始时间",
+	lastmod_time datetime comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
 	index ptid (push_id),
 	primary key(id)
