@@ -23,6 +23,7 @@ import com.iwami.iwami.app.model.Present;
 import com.iwami.iwami.app.model.Share;
 import com.iwami.iwami.app.model.User;
 import com.iwami.iwami.app.service.PresentService;
+import com.iwami.iwami.app.service.PushService;
 import com.iwami.iwami.app.service.UserService;
 
 public class PresentBizImpl implements PresentBiz {
@@ -32,6 +33,8 @@ public class PresentBizImpl implements PresentBiz {
 	private PresentService presentService;
 	
 	private UserService userService;
+	
+	private PushService pushService;
 
 	@Override
 	public List<Present> getAllPresents(long userid) {
@@ -58,8 +61,8 @@ public class PresentBizImpl implements PresentBiz {
 			doGift(user, user2, prize);
 			status = Exchange.STATUS_FINISH;
 			
-			// jpush TODO
-			String msg = user.getName() + "|" + prize;
+			// JPUSH
+			pushService.pushUserMsg(user2.getAlias(), "您获得" + user.getName() + "赠送的" + prize + "米粒，快来看看吧");
 		} catch(NotEnoughPrizeException e){
 			if(logger.isErrorEnabled())
 				logger.error("exception in gift from " + user.getId() + " to " + user2.getId() + " <" + prize + ">", e);
@@ -336,6 +339,14 @@ public class PresentBizImpl implements PresentBiz {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public PushService getPushService() {
+		return pushService;
+	}
+
+	public void setPushService(PushService pushService) {
+		this.pushService = pushService;
 	}
 
 }

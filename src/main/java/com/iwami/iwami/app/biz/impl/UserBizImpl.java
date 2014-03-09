@@ -9,15 +9,18 @@ import com.iwami.iwami.app.biz.UserBiz;
 import com.iwami.iwami.app.exception.VerifyCodeMismatchException;
 import com.iwami.iwami.app.model.Code;
 import com.iwami.iwami.app.model.User;
+import com.iwami.iwami.app.service.SMSService;
 import com.iwami.iwami.app.service.UserService;
 import com.iwami.iwami.app.util.IWamiUtils;
 import com.iwami.iwami.app.util.SMSUtils;
 
 public class UserBizImpl implements UserBiz {
 	
+	private int verifyCodeLength = 4;
+	
 	private UserService userService;
 	
-	private int verifyCodeLength = 4;
+	private SMSService smsService;
 	
 	public User getUserById(long userid){
 		return userService.getUserById(userid);
@@ -46,8 +49,7 @@ public class UserBizImpl implements UserBiz {
 			_code.setCellPhone(cellPhone);
 			_code.setCode(code);
 			if(userService.addCode(_code)){
-				//TODO modify sms content
-				if(SMSUtils.sendLuosiMao("验证码为" + code + "，5分钟内有效【iwami】", "" + cellPhone))
+				if(smsService.sendVerifyCodeSMS("" + cellPhone, code))
 					result = true;
 				else
 					throw new RuntimeException("Error in sending code to cell phone.");
@@ -62,8 +64,7 @@ public class UserBizImpl implements UserBiz {
 		boolean result = false;
 		
 		if(cellPhone > 0){
-			//TODO modify sms content
-			if(SMSUtils.sendLuosiMao("发送邀请短信", "" + cellPhone))
+			if(smsService.sendInvitationSMS("" + cellPhone))
 				result = true;
 			else
 				throw new RuntimeException("Error in sending code to cell phone.");
@@ -109,5 +110,13 @@ public class UserBizImpl implements UserBiz {
 
 	public void setVerifyCodeLength(int verifyCodeLength) {
 		this.verifyCodeLength = verifyCodeLength;
+	}
+
+	public SMSService getSmsService() {
+		return smsService;
+	}
+
+	public void setSmsService(SMSService smsService) {
+		this.smsService = smsService;
 	}
 }

@@ -97,6 +97,7 @@
 	</bean>
 	<bean name="userBiz" class="com.iwami.iwami.app.biz.impl.UserBizImpl">
 		<property name="userService" ref="userService" />
+		<property name="smsService" ref="smsService" />
 		<property name="verifyCodeLength">
 			<value>#[verifyCode.Length]</value>
 		</property>
@@ -119,6 +120,7 @@
 	<bean name="presentBiz" class="com.iwami.iwami.app.biz.impl.PresentBizImpl">
 		<property name="presentService" ref="presentService" />
 		<property name="userService" ref="userService" />
+		<property name="pushService" ref="pushService" />
 	</bean>
 	
 	<!-- service -->
@@ -158,6 +160,36 @@
 	<bean name="presentService" class="com.iwami.iwami.app.service.impl.PresentServiceImpl">
 		<property name="presentDao" ref="presentDao" />
 		<property name="expireTime" ref="expireTime" />
+	</bean>
+	<bean name="pushService" class="com.iwami.iwami.app.service.impl.PushServiceImpl">
+		<property name="pushSAL" ref="pushSAL" />
+	</bean>
+	<bean name="smsService" class="com.iwami.iwami.app.service.impl.SMSServiceImpl">
+		<property name="smsSAL" ref="smsSAL" />
+	</bean>
+	
+	<!-- sal -->
+	<bean name="pushSAL" class="com.iwami.iwami.app.sal.impl.JPushSALImpl">
+		<property name="jpush">
+			<bean class="cn.jpush.api.JPushClient">
+				<constructor-arg index="0"><value>#[jpush.secret]</value></constructor-arg>
+				<constructor-arg index="1"><value>#[jpush.appKey]</value></constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	<bean name="smsSAL" class="com.iwami.iwami.app.sal.impl.SMSSALImpl">
+		<property name="url">
+			<value>#[sms.url]</value>
+		</property>
+		<property name="apiKey">
+			<value>#[sms.apiKey]</value>
+		</property>
+		<property name="encoding">
+			<value>#[sms.encoding]</value>
+		</property>
+		<property name="send">
+			<value>#[sms.send]</value>
+		</property>
 	</bean>
 	
 	<!-- common beans -->
