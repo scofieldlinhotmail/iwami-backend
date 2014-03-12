@@ -13,8 +13,8 @@ public class SMSServiceImpl implements SMSService {
 	}
 
 	@Override
-	public boolean sendInvitationSMS(String cellPhone) {
-		return smsSAL.sendInvitationSMS(cellPhone);
+	public boolean sendInvitationSMS(String cellPhone, String name, long phone, int count) {
+		return smsSAL.sendInvitationSMS(cellPhone, name, phone, count);
 	}
 
 	public SMSSAL getSmsSAL() {

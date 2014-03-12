@@ -561,17 +561,18 @@ public class PresentAjax {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
-			if(params.containsKey("userid") && params.containsKey("cellPhone")){
+			if(params.containsKey("userid") && params.containsKey("cellPhone") && params.containsKey("count")){
 				long userid = NumberUtils.toLong(params.get("userid"), -1);
 				if(userid > 0){
 					long cellPhone = NumberUtils.toLong(params.get("cellPhone"), -1);
-					if(cellPhone > 0 && IWamiUtils.validatePhone("" + cellPhone)){
+					int count = NumberUtils.toInt(params.get("count"), -1);
+					if(cellPhone > 0 && IWamiUtils.validatePhone("" + cellPhone) && count > 0){
 						User user = userBiz.getUserById(userid);
 						if(user != null){
 							if(cellPhone != user.getCellPhone()){
 								User user2 = userBiz.getUserByCellPhone(cellPhone);
 								if(user2 == null){
-									if(userBiz.sendSMS(cellPhone, user))
+									if(userBiz.sendSMS(cellPhone, user, count))
 										result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 									else
 										result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);

@@ -16,7 +16,7 @@
 	<!-- *****************************************************filter begin**************************************************** -->
 	<!-- Encoding Filter -->
 	<filter>
-		<filter-name>Encoding Filter</filter-name>
+		<filter-name>setCharacterEncodingFilter</filter-name>
 		<filter-class>
 			com.iwami.iwami.app.common.filter.SetCharacterEncodingFilter
 		</filter-class>
@@ -30,7 +30,7 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>Encoding Filter</filter-name>
+		<filter-name>setCharacterEncodingFilter</filter-name>
 		<url-pattern>/client/*</url-pattern>
 	</filter-mapping>
 	

@@ -27,7 +27,7 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 
 	@Override
 	public Wami getLatestWami(long userid, long taskid) {
-		List<Wami> wamis = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and task_id = ? order by lastmod_time, id desc limit 1", 
+		List<Wami> wamis = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and task_id = ? order by lastmod_time desc limit 1", 
 				new Object[]{0, userid, taskid}, new WamiRowMapper());
 		
 		if(wamis != null && wamis.size() > 0)

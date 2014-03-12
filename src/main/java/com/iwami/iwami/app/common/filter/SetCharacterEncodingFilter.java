@@ -36,7 +36,6 @@ import javax.servlet.ServletResponse;
  *
  * @author <a href="mailto:jwtronics@yahoo.com">John Wong</a>
  *
- * @version $Id: SetCharacterEncodingFilter.java,v 1.3 2009/03/02 03:32:20 guyongyong Exp $
  */
 public class SetCharacterEncodingFilter implements Filter {
 

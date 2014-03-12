@@ -12,7 +12,6 @@ import com.iwami.iwami.app.model.User;
 import com.iwami.iwami.app.service.SMSService;
 import com.iwami.iwami.app.service.UserService;
 import com.iwami.iwami.app.util.IWamiUtils;
-import com.iwami.iwami.app.util.SMSUtils;
 
 public class UserBizImpl implements UserBiz {
 	
@@ -60,11 +59,11 @@ public class UserBizImpl implements UserBiz {
 	}
 
 	@Override
-	public boolean sendSMS(long cellPhone, User user) {
+	public boolean sendSMS(long cellPhone, User user, int count) {
 		boolean result = false;
 		
 		if(cellPhone > 0){
-			if(smsService.sendInvitationSMS("" + cellPhone))
+			if(smsService.sendInvitationSMS("" + cellPhone, user.getName(), user.getCellPhone(), count))
 				result = true;
 			else
 				throw new RuntimeException("Error in sending code to cell phone.");

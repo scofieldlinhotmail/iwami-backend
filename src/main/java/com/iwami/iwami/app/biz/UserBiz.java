@@ -9,7 +9,7 @@ public interface UserBiz {
 
 	public boolean sendVerifyCode(long cellPhone);
 
-	public boolean sendSMS(long cellPhone, User user);
+	public boolean sendSMS(long cellPhone, User user, int count);
 
 	public User getUserByCellPhone(long cellPhone);
 
