@@ -34,15 +34,15 @@ public class SMSSALImpl implements SMSSAL {
 	
 	private boolean send = false;
 	
-	public static void main(String[] args) {
-		SMSSALImpl sms = new SMSSALImpl();
-		sms.send = true;
+//	public static void main(String[] args) {
+//		SMSSALImpl sms = new SMSSALImpl();
+//		sms.send = true;
 //		sms.sendVerifyCodeSMS("18691841680", "7773");
 //		System.out.println(sms.sendSMS("18611007601", "能不能提供正确的JAVA接入代码啊！【爱挖米】"));
 		//314285
 		//System.out.println(sms.addTemplate("温馨提示：您的朋友#name#（手机号：#phone#）向您赠送了#count#爱挖米米粒，可用来兑换小米手机/Q币等奖品。戳www.iwami.cn现在立即免费安装爱挖米，现在开始就用手机赚钱【爱挖米】"));
-		sms.sendInvitationSMS("18611007601", "test", 18611007601l, 2000);
-	}
+//		sms.sendInvitationSMS("18611007601", "test", 18611007601l, 2000);
+//	}
 	
 	public boolean sendInvitationSMS(String cellPhone, String name, long phone, int count){
 		if(!send)
