@@ -170,29 +170,35 @@ public class TaskBizImpl implements TaskBiz {
 		}
 		
 		// sort new
-		Collections.sort(newtasks, new TaskNewComparator());
-		// set rank
-		for(int i = 0; i < newtasks.size(); i ++){
-			newtasks.get(i).setStatus(Task.STATUS_READY);
-			newtasks.get(i).setRank(i);
+		if(newtasks != null && newtasks.size() > 0){
+			Collections.sort(newtasks, new TaskNewComparator());
+			// set rank
+			for(int i = 0; i < newtasks.size(); i ++){
+				newtasks.get(i).setStatus(Task.STATUS_READY);
+				newtasks.get(i).setRank(i);
+			}
 		}
 		// add new tasks
 		tasks.add(newtasks);
 		
 		// sort ongoing
-		Collections.sort(ongoingtasks, new TaskOngoingComparator());
-		// set rank
-		for(int i = 0; i < ongoingtasks.size(); i ++){
-			ongoingtasks.get(i).setRank(i);
+		if(ongoingtasks != null && ongoingtasks.size() > 0){
+			Collections.sort(ongoingtasks, new TaskOngoingComparator());
+			// set rank
+			for(int i = 0; i < ongoingtasks.size(); i ++){
+				ongoingtasks.get(i).setRank(i);
+			}
 		}
 		// add ongoing tasks
 		tasks.add(ongoingtasks);
 		
 		// sort done
-		Collections.sort(donetasks, new TaskDoneComparator());
-		// set rank
-		for(int i = 0; i < donetasks.size(); i ++){
-			donetasks.get(i).setRank(i);
+		if(donetasks != null && donetasks.size() > 0){
+			Collections.sort(donetasks, new TaskDoneComparator());
+			// set rank
+			for(int i = 0; i < donetasks.size(); i ++){
+				donetasks.get(i).setRank(i);
+			}
 		}
 		// add done tasks
 		tasks.add(donetasks);
