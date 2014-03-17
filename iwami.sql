@@ -304,9 +304,9 @@ create table apk(
 create table share (
 	id bigint(20) not null auto_increment comment "自增id",
 	userid bigint(20) not null comment "用户id",
-	type tinyint(3) not null comment "0：实物兑换/1：银行卡提现/2：支付宝提现/3：手机充值/4：抽奖/5：低调炫耀",
+	type tinyint(3) not null comment "0-受赠、1-线下兑换、2-电话卡、3-支付宝、4-银行卡、5-抽奖、6-线上实物兑换、7-关于页面",
 	target tinyint(3) not null comment "0：微信好友/1：微信朋友圈/2：新浪微博",
-	msg varchar(255) not null comment "分享内容",
+	msg varchar(1024) not null comment "分享内容",
 	lastmod_time datetime not null comment "上次修改时间",
 	index lhid (userid),
 	primary key(id)
@@ -370,3 +370,10 @@ create table admin_login(
 	index aluid (userid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- report
+create table request_log(
+	userid bigint(20) not null comment "用户id",
+	type tinyint(3) not null comment "请求类型：1攻略列表，2攻略详情，3榜单列表，4任务列表，5红包列表，6APP下载，7登录",
+	add_time datetime not null comment "时间",
+	index rctime(add_time)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

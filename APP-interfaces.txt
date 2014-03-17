@@ -438,6 +438,7 @@
  	接口名字：sendsms.ajax
 	输入参数：userid: int 用户id
 			  cellPhone: long 被赠送好友的手机号
+			  count: int 赠送的米粒数
 	输出参数：status：int值  
 			  	0: 返回成功
 			  	300： 缺少参数
@@ -656,7 +657,7 @@
 17、兑换分享记录接口
 	接口名字：share.ajax
 	输入参数：userid：long 用户id
-						type；int 0：实物兑换/1：银行卡提现/2：支付宝提现/3：手机充值/4：抽奖/5：低调炫耀
+						type；int 0-受赠、1-线下兑换、2-电话卡、3-支付宝、4-银行卡、5-抽奖、6-线上实物兑换、7-关于页面
 						target：int 0：微信好友/1：微信朋友圈/2：新浪微博
 						msg：String 分项内容
 	输出参数：status：int值  
