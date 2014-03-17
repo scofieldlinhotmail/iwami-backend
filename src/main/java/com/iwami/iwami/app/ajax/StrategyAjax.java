@@ -10,6 +10,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.iwami.iwami.app.biz.LogBiz;
 import com.iwami.iwami.app.biz.StrategyBiz;
 import com.iwami.iwami.app.common.dispatch.AjaxClass;
 import com.iwami.iwami.app.common.dispatch.AjaxMethod;
@@ -26,6 +27,8 @@ public class StrategyAjax {
 	private Log logger = LogFactory.getLog(getClass());
 
 	private StrategyBiz strategyBiz;
+	
+	private LogBiz logBiz;
 
 	@AjaxMethod(path = "strategy/rate.ajax")
 	public Map<Object, Object> rateStrategy(Map<String, String> params) {
@@ -102,6 +105,13 @@ public class StrategyAjax {
 								
 								result.put("data", data);
 								result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+								try{
+									com.iwami.iwami.app.model.Log log = new com.iwami.iwami.app.model.Log();
+									log.setType(com.iwami.iwami.app.model.Log.TYPE_STRATEGY_DETAIL);
+									logBiz.log(log);
+								} catch(Throwable t){
+									t.printStackTrace();
+								}
 							} else{
 								result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_STRATEGY_NOT_EXISTS);
 								result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_ERROR_STRATEGY_NOT_EXISTS));
@@ -164,6 +174,13 @@ public class StrategyAjax {
 			
 			result.put("data", data);
 			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+			try{
+				com.iwami.iwami.app.model.Log log = new com.iwami.iwami.app.model.Log();
+				log.setType(com.iwami.iwami.app.model.Log.TYPE_STRATEGY_DETAIL);
+				logBiz.log(log);
+			} catch(Throwable t){
+				t.printStackTrace();
+			}
 		} catch(Throwable t){
 			if(logger.isErrorEnabled())
 				logger.error("Exception in getStrategyList", t);
@@ -218,6 +235,14 @@ public class StrategyAjax {
 
 	public void setStrategyBiz(StrategyBiz strategyBiz) {
 		this.strategyBiz = strategyBiz;
+	}
+
+	public LogBiz getLogBiz() {
+		return logBiz;
+	}
+
+	public void setLogBiz(LogBiz logBiz) {
+		this.logBiz = logBiz;
 	}
 	
 }

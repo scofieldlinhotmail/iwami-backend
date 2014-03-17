@@ -8,6 +8,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.iwami.iwami.app.biz.LogBiz;
 import com.iwami.iwami.app.biz.UserBiz;
 import com.iwami.iwami.app.common.dispatch.AjaxClass;
 import com.iwami.iwami.app.common.dispatch.AjaxMethod;
@@ -22,6 +23,8 @@ public class UserAjax {
 	private Log logger = LogFactory.getLog(getClass());
 	
 	private UserBiz userBiz;
+	
+	private LogBiz logBiz;
 
 	@AjaxMethod(path = "userinfo.ajax")
 	public Map<Object, Object> getUserinfo(Map<String, String> params) {
@@ -140,6 +143,14 @@ public class UserAjax {
 								result.put("uuid", user.getUuid());
 								result.put("cellPhone", user.getCellPhone());
 								result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+								try{
+									com.iwami.iwami.app.model.Log log = new com.iwami.iwami.app.model.Log();
+									log.setUserid(user.getId());
+									log.setType(com.iwami.iwami.app.model.Log.TYPE_LOGIN);
+									logBiz.log(log);
+								} catch(Throwable t){
+									t.printStackTrace();
+								}
 							} else
 								result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR);
 						} else{
@@ -255,6 +266,14 @@ public class UserAjax {
 
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
+	}
+
+	public LogBiz getLogBiz() {
+		return logBiz;
+	}
+
+	public void setLogBiz(LogBiz logBiz) {
+		this.logBiz = logBiz;
 	}
 
 }

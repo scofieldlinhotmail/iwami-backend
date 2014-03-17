@@ -25,9 +25,10 @@ public class ApkAjax {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
-			String url = apkBiz.getApkURL();
+			//String url = apkBiz.getApkURL();
 			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
-			result.put("url", url);
+			//result.put("url", url);
+			result.put("url", "http://www.iwami.cn/download");
 		} catch(Throwable t){
 			if(logger.isErrorEnabled())
 				logger.error("Exception in download", t);

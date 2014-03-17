@@ -45,4 +45,6 @@ public interface SqlConstants {
 	public static final String TABLE_EXCHANGE = DATABASE + ".`exchange`";
 
 	public static final String TABLE_SHARE = DATABASE + ".`share`";
+
+	public static final String TABLE_REQUEST_LOG = DATABASE + ".`request_log`";
 }

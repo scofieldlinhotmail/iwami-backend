@@ -56,6 +56,7 @@
 	</bean>
 	<bean name="userAjax" class="com.iwami.iwami.app.ajax.UserAjax">
 		<property name="userBiz" ref="userBiz" />
+		<property name="logBiz" ref="logBiz" />
 	</bean>
 	<bean name="tipsAjax" class="com.iwami.iwami.app.ajax.TipsAjax">
 		<property name="tipsBiz" ref="tipsBiz" />
@@ -67,9 +68,11 @@
 	</bean>
 	<bean name="strategyAjax" class="com.iwami.iwami.app.ajax.StrategyAjax">
 		<property name="strategyBiz" ref="strategyBiz"></property>
+		<property name="logBiz" ref="logBiz" />
 	</bean>
 	<bean name="taskAjax" class="com.iwami.iwami.app.ajax.TaskAjax">
 		<property name="taskBiz" ref="taskBiz"></property>
+		<property name="logBiz" ref="logBiz" />
 	</bean>
 	<bean name="presentAjax" class="com.iwami.iwami.app.ajax.PresentAjax">
 		<property name="presentBiz" ref="presentBiz"></property>
@@ -122,6 +125,9 @@
 		<property name="userService" ref="userService" />
 		<property name="pushService" ref="pushService" />
 	</bean>
+	<bean name="logBiz" class="com.iwami.iwami.app.biz.impl.LogBizImpl">
+		<property name="logService" ref="logService" />
+	</bean>
 	
 	<!-- service -->
 	<bean name="onstartService" class="com.iwami.iwami.app.service.impl.OnstartServiceImpl">
@@ -166,6 +172,9 @@
 	</bean>
 	<bean name="smsService" class="com.iwami.iwami.app.service.impl.SMSServiceImpl">
 		<property name="smsSAL" ref="smsSAL" />
+	</bean>
+	<bean name="logService" class="com.iwami.iwami.app.service.impl.LogServiceImpl">
+		<property name="logDao" ref="logDao" />
 	</bean>
 	
 	<!-- sal -->
