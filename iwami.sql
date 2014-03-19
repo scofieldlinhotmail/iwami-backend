@@ -13,7 +13,7 @@ create table onstart (
 	uuid varchar(50) not null comment "设备id",
 	gps varchar(50) not null comment "用户gps位置",
 	alias varchar(50) not null comment "android jpush推送id",
-	type tinyint(3) not null default 0 comment "启动类型: 0手工启动,1新抢米任务推送,2任务完成，3本周小结，4本月小结，5运营消息，6赠送米粒",
+	type tinyint(3) not null default 0 comment "启动类型: 0冷启动,1激活",
 	version varchar(10) not null comment "客户端版本号",
 	add_time datetime not null comment "客户端上传时间",
 	lastmod_time datetime not null comment "服务器添加时间"
@@ -131,7 +131,7 @@ create table wami (
 	id bigint(20) not null auto_increment comment "自增id",
 	userid bigint(20) not null comment "用户id",
     task_id bigint(20) not null  comment "米粒任务id",
-    type tinyint(3) not null comment "挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成",
+    type tinyint(3) not null comment "挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成，6开始运行，7结束运行",
     prize int(10) default 0 not null  comment "米粒数",
     channel varchar(50) comment "渠道",
     add_time datetime not null comment "客户端上传时间",
@@ -374,6 +374,7 @@ create table admin_login(
 create table request_log(
 	userid bigint(20) not null comment "用户id",
 	type tinyint(3) not null comment "请求类型：1攻略列表，2攻略详情，3榜单列表，4任务列表，5红包列表，6APP下载，7登录",
+	msg varchar(255) null comment "url parameter",
 	add_time datetime not null comment "时间",
 	index rctime(add_time)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

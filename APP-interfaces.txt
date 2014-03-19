@@ -20,7 +20,7 @@
 			  gps: String字符串  用户gps位置（小于50个字符）
 				alias: String android jpush推送id
 			  version：String 客户端版本信息
-			  type: int类型  启动类型（0手工启动,1新抢米任务推送,2任务完成，3本周小结，4本月小结，5运营消息，6赠送米粒，7确认发货）
+			  type: int类型  启动类型（0冷启动,1激活）
 			  time: long类型  客户端上传时间（单位：毫秒）
 	输出参数：status：int值  
 			  	0: 返回成功
@@ -132,7 +132,7 @@
 	接口名字：wami.ajax
 	输入参数：userid:  int  用户ID
 			  taskid:  int  任务ID
-			  type:	int  挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成
+			  type:	int  挖米类型: -1 未开始/可抢 0 抢米任务开始，1下载开始，2下载完成，3安装完成，4启动运行，5关闭/任务完成，6开始运行，7结束运行
 			  time:	long  客户端上传时间（单位：毫秒）
 			  channel：String 渠道值，线上可以为空（服务端固定值）
 	输出参数：status：int值  
