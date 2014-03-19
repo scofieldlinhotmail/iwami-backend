@@ -18,6 +18,11 @@ public class WamiServiceImpl implements WamiService{
 	}
 
 	@Override
+	public Wami getWamiByType(long userid, long taskid, int type) {
+		return wamiDao.getWamiByType(userid, taskid, type);
+	}
+
+	@Override
 	public Map<Long, Wami> getLatestWamis(long userid, List<Long> taskids) {
 		return wamiDao.getLatestWami(userid, taskids);
 	}

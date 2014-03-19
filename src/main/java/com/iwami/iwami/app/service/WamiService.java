@@ -18,4 +18,6 @@ public interface WamiService{
 
 	public Map<Long, Wami> getDoneTaskIds(long userid, Date start);
 
+	public Wami getWamiByType(long userid, long taskid, int type);
+
 }

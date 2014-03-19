@@ -50,12 +50,15 @@ public class WamiBizImpl  implements WamiBiz {
 	@Override
 	@Transactional(rollbackFor=Exception.class, value="txManager")
 	public void wami(User user, Task task, int type, long time, String channel) throws TaskRepeatStartException, TaskNotExistsException, TaskFinishedException, TaskUnavailableException, TaskWamiedException {
-		Wami lastestWami = wamiService.getLatestWami(user.getId(), task.getId());
+		Wami lastWamiType = wamiService.getWamiByType(user.getId(), task.getId(), type);
+		
+		if(lastWamiType != null)
+			type += 100;
 		
 		if(type == Task.STATUS_START){
 			// start task, check
-			if(lastestWami != null)
-				throw new TaskRepeatStartException();
+			/*if(lastWamiType != null)
+				throw new TaskRepeatStartException();*/
 			
 			Date now = new Date();
 			if(task.getStartTime() != null && now.before(task.getStartTime()))
@@ -68,8 +71,8 @@ public class WamiBizImpl  implements WamiBiz {
 				throw new TaskUnavailableException();
 		}
 		
-		if(lastestWami != null && lastestWami.getType() == Task.STATUS_FINISH)
-			throw new TaskWamiedException();
+		/*if(lastWamiType != null && lastWamiType.getType() == Task.STATUS_FINISH)
+			throw new TaskWamiedException();*/
 		
 		Wami wami = new Wami();
 		wami.setUserid(user.getId());
