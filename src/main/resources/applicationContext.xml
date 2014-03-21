@@ -46,6 +46,9 @@
 	<bean name="monitorAjax" class="com.iwami.iwami.app.ajax.MonitorAjax" />
 	<bean name="apkAjax" class="com.iwami.iwami.app.ajax.ApkAjax">
 		<property name="apkBiz" ref="apkBiz" />
+		<property name="downloadURL">
+			<value>#[apk.downloadURL]</value>
+		</property>
 	</bean>
 	<bean name="contactAjax" class="com.iwami.iwami.app.ajax.ContactAjax">
 		<property name="contactBiz" ref="contactBiz" />

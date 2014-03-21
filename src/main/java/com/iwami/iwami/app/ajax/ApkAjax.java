@@ -19,6 +19,8 @@ public class ApkAjax {
 	private Log logger = LogFactory.getLog(getClass());
 	
 	private ApkBiz apkBiz;
+	
+	private String downloadURL;
 
 	@AjaxMethod(path = "download.ajax")
 	public Map<Object, Object> download(Map<String, String> params) {
@@ -28,7 +30,7 @@ public class ApkAjax {
 			//String url = apkBiz.getApkURL();
 			result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 			//result.put("url", url);
-			result.put("url", "http://www.iwami.cn/download");
+			result.put("url", downloadURL);
 		} catch(Throwable t){
 			if(logger.isErrorEnabled())
 				logger.error("Exception in download", t);
@@ -78,6 +80,14 @@ public class ApkAjax {
 
 	public void setApkBiz(ApkBiz apkBiz) {
 		this.apkBiz = apkBiz;
+	}
+
+	public String getDownloadURL() {
+		return downloadURL;
+	}
+
+	public void setDownloadURL(String downloadURL) {
+		this.downloadURL = downloadURL;
 	}
 
 }

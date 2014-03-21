@@ -10,7 +10,7 @@
 
 	后端逻辑: 简单的return 0 
 	
-	http://localhost:8080/iwami/client/luck/monitor.ajax
+	http://localhost:8080/iwami/client/monitor.ajax
 
 2.app上传启动信息
 	接口名字：onstart.ajax
