@@ -341,7 +341,7 @@ create table push(
 	`interval` bigint(20) not null default 1000 comment "间隔时间，以毫秒为单位",
 	msg varchar(1024) comment "短信内容",
 	status tinyint(3) not null default 0 comment "状态：0新建，1暂停，2停止，3恢复，4推送成功，5短信发送成功", 
-	cell_phone varchar(255) not null comment "手机号",
+	cell_phone varchar(255) comment "手机号",
 	add_time datetime not null comment "推送开始时间",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
