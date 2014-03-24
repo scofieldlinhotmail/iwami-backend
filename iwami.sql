@@ -105,6 +105,7 @@ create table task (
 	size decimal(6,2) not null default 0  comment "大小,单位为KB保留两位小数",
 	intr varchar(255) comment "简介",
 	appintr varchar(255) comment "app简介",
+	packagename varchar(255) comment "app包名称",
 	prize int(10) default 0 not null  comment "米粒数",
 	type int(10) default 0 not null comment "任务类型，用二进制表示，从低位开始，第一位代表是否普通任务，第二位代表是否宝箱任务,第三位代表是否分享任务，第四位代表是否金榜任务，第五位代表是否线下任务",
 	background tinyint(3) not null default 0 comment "是否后台运行: 0不需要,1需要",

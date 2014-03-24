@@ -88,6 +88,7 @@
 			   	 	rank: int类型   顺序
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
+			   	 	packageName: String  app package name
 			   	 	prize: int  米粒数
 			   	 	url: String apk下载地址
 			   	 	available: int  是否抢光: 0未抢光，1抢光
@@ -106,6 +107,7 @@
 			   	 	rank: int类型   顺序
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
+			   	 	packageName: String  app package name
 			   	 	prize: int  米粒数
 			   	 	url: String apk下载地址
 			   	 	available: int  是否抢光: 0未抢光，1抢光
@@ -263,6 +265,7 @@
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
 				   	 	prize: int  米粒数
+			   	 	packageName: String  app package name
 			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
 				   	 	background: int 是否后台运行: 0不需要,1需要
@@ -284,6 +287,7 @@
 			   			rank: int 顺序
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
+			   	 	packageName: String  app package name
 				   	 	prize: int  米粒数
 			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
@@ -306,6 +310,7 @@
 			   			rank: int 顺序
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
+			   	 	packageName: String  app package name
 				   	 	prize: int  米粒数
 			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
@@ -346,6 +351,7 @@
 			   			rank: int 顺序
 			   	 	intr: String  任务简介
 			   	 	appintr: String  app简介
+			   	 	packageName: String  app package name
 				   	 	prize: int  米粒数
 			   	 	url: String apk下载地址
 				   	 	available: int  是否抢光: 0未抢光，1抢光
