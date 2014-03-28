@@ -2,6 +2,7 @@ package com.iwami.iwami.app.biz.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,23 @@ public class TaskBizImpl implements TaskBiz {
 					
 			Collections.sort(ttt, new TaskRankComparator());
 			
+			List<Long> ids = new ArrayList<Long>();
 			for(int i = 0; i < ttt.size(); i ++){
 				Task _task = new Task();
 				BeanUtils.copyProperties(ttt.get(i), _task);
 				_task.setRank(i);
 				tasks.add(_task);
+				ids.add(_task.getId());
 			}
+			
+			List<Task> _tasks = taskService.getTasksByIds(ids);
+			Map<Long, Task> taskMaps = new HashMap<Long, Task>();
+			for(Task task : _tasks)
+				taskMaps.put(task.getId(), task);
+			
+			for(Task task : tasks)
+				if(taskMaps.containsKey(task.getId()))
+					task.setCurrentPrize(taskMaps.get(task.getId()).getCurrentPrize());
 		}
 		
 		return tasks;

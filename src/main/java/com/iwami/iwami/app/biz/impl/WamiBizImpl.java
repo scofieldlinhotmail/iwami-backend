@@ -40,10 +40,11 @@ public class WamiBizImpl  implements WamiBiz {
 		wami.setLastmodUserid(user.getId());
 		wamiService.newWami(wami);
 		
-		if(lastestWami == null && type == Task.STATUS_FINISH){
+		if(type == Task.STATUS_FINISH){
 			// finish task
-			taskService.incrTaskCurrentPrize(task.getId());
-			userService.addUserCurrentPrize(user.getId(), task.getPrize());
+			taskService.incrShareTaskCurrentPrize(task.getId());
+			if(lastestWami == null)
+				userService.addUserCurrentPrize(user.getId(), task.getPrize());
 		}
 	}
 

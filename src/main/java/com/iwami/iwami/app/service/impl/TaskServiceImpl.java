@@ -69,6 +69,11 @@ public class TaskServiceImpl implements TaskService {
 		taskDao.incrTaskCurrentPrize(taskid);
 	}
 
+	@Override
+	public void incrShareTaskCurrentPrize(long taskid) {
+		taskDao.incrShareTaskCurrentPrize(taskid);
+	}
+
 	public TaskDao getTaskDao() {
 		return taskDao;
 	}

@@ -53,6 +53,11 @@ public class TaskDaoImpl extends JdbcDaoSupport implements TaskDao {
 	public void incrTaskCurrentPrize(long taskid) {
 		getJdbcTemplate().update("update " + SqlConstants.TABLE_TASK + " set current_prize = current_prize + prize where id = ?", new Object[]{taskid});
 	}
+
+	@Override
+	public void incrShareTaskCurrentPrize(long taskid) {
+		getJdbcTemplate().update("update " + SqlConstants.TABLE_TASK + " set current_prize = current_prize + 1 where id = ?", new Object[]{taskid});
+	}
 }
 
 class TreasureConfigRowMapper implements RowMapper<TreasureConfig>{

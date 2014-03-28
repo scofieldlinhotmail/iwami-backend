@@ -15,6 +15,8 @@ public interface TaskService {
 
 	public void incrTaskCurrentPrize(long taskid);
 
+	public void incrShareTaskCurrentPrize(long taskid);
+
 	public List<Task> getTasksByIds(List<Long> taskIds);
 
 }

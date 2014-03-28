@@ -261,6 +261,8 @@ public class PresentBizImpl implements PresentBiz {
 						tmp3 = new ExchangeHistory();
 						tmp3.setTime(time);
 						tmp3.setType(type);
+						tmp3.setExpressName(exchange.getExpressName());
+						tmp3.setExpressNo(exchange.getExpressNo());
 						tmp3.setStatus(status);
 						tmp22.put(status, tmp3);
 						result.add(tmp3);
