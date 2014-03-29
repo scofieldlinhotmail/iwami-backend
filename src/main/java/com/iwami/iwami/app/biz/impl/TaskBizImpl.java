@@ -91,12 +91,16 @@ public class TaskBizImpl implements TaskBiz {
 			if(ids != null && ids.size() > 0 && userid > 0){
 				Map<Long, Wami> wamis = wamiService.getLatestWamis(userid, ids);
 				
-				if(wamis != null && wamis.size() > 0)
+				if(wamis != null && wamis.size() > 0){
+					List<Task> result = new ArrayList<Task>();
 					for(Task _task : tasks)
-						if(wamis.containsKey(_task.getId()))
-							_task.setStatus(wamis.get(_task.getId()).getType());
-						else
+						if(!wamis.containsKey(_task.getId())){
 							_task.setStatus(Task.STATUS_READY);
+							result.add(_task);
+						}
+					
+					tasks = result;
+				}
 			}
 		}
 		
