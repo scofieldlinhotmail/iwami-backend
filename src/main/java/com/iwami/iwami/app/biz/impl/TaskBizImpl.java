@@ -2,12 +2,14 @@ package com.iwami.iwami.app.biz.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.iwami.iwami.app.biz.TaskBiz;
@@ -210,6 +212,13 @@ public class TaskBizImpl implements TaskBiz {
 		
 		// sort done
 		if(donetasks != null && donetasks.size() > 0){
+			Date now = new Date();
+			List<Task> tmps = new ArrayList<Task>();
+			for(Task task : donetasks)
+				if(DateUtils.isSameDay(now, task.getLastModTime()))
+					tmps.add(task);
+			donetasks = tmps;
+			
 			Collections.sort(donetasks, new TaskDoneComparator());
 			// set rank
 			for(int i = 0; i < donetasks.size(); i ++){
