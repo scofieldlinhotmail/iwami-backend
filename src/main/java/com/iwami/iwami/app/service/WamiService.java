@@ -1,6 +1,5 @@
 package com.iwami.iwami.app.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public interface WamiService{
 
 	public Map<Long, Wami> getOngoingWami(long userid);
 
-	public Map<Long, Wami> getDoneTaskIds(long userid, Date start);
+	public Map<Long, Wami> getDoneTaskIds(long userid);
 
 	public Wami getWamiByType(long userid, long taskid, int type);
 

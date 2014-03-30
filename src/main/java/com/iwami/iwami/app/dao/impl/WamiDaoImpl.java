@@ -61,9 +61,9 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 	}
 
 	@Override
-	public Map<Long, Wami> getDoneTaskIds(long userid, Date start) {
+	public Map<Long, Wami> getDoneTaskIds(long userid/*, Date start*/) {
 		final Map<Long, Wami> wamis = new HashMap<Long, Wami>();
-		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and type = ? and lastmod_time > ?", new Object[]{0, userid, Task.STATUS_FINISH, start}, new WamiRowMapper());
+		List<Wami> tmp = getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and type = ?", new Object[]{0, userid, Task.STATUS_FINISH/*, start*/}, new WamiRowMapper());
 		if(tmp != null && tmp.size() > 0)
 			for(Wami wami : tmp)
 				wamis.put(wami.getTaskId(), wami);

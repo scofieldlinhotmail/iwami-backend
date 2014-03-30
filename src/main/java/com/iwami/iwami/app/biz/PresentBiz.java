@@ -34,5 +34,5 @@ public interface PresentBiz {
 
 	public Map<Long, Present> getOfflinePresentsByIds(List<Long> ids);
 
-	public boolean exchangeOffline(User user, Map<Present, Integer> presentCnts, String channel);
+	public boolean exchangeOffline(User user, Map<Present, Integer> presentCnts, Map<Present, String> presentChannels);
 }

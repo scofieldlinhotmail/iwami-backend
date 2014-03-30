@@ -288,7 +288,7 @@ public class PresentBizImpl implements PresentBiz {
 	}
 
 	@Override
-	public boolean exchangeOffline(User user, Map<Present, Integer> presentCnts, String channel) {
+	public boolean exchangeOffline(User user, Map<Present, Integer> presentCnts, Map<Present, String> presentChannels) {
 		int allPrize = 0;
 		List<Exchange> exchanges = new ArrayList<Exchange>();
 		for(Present present : presentCnts.keySet()){
@@ -304,7 +304,8 @@ public class PresentBizImpl implements PresentBiz {
 			exchange.setPrize(prize);
 			allPrize += prize;
 			exchange.setStatus(Exchange.STATUS_NEW);
-			exchange.setChannel(channel);
+			if(presentChannels.containsKey(present))
+				exchange.setChannel(presentChannels.get(present));
 			exchange.setLastModUserid(user.getId());
 			exchanges.add(exchange);
 		}

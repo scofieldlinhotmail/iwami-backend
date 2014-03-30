@@ -232,7 +232,7 @@ public class TaskBizImpl implements TaskBiz {
 	}
 
 	private List<Task> getDoneTasks(long userid) {
-		Map<Long, Wami> taskIds = wamiService.getDoneTaskIds(userid, IWamiUtils.getTodayStart());
+		Map<Long, Wami> taskIds = wamiService.getDoneTaskIds(userid/*, IWamiUtils.getTodayStart()*/);
 		if(taskIds != null && taskIds.size() > 0){
 			List<Task> tasks = taskService.getTasksByIds(new ArrayList<Long>(taskIds.keySet()));
 			if(tasks != null && tasks.size() > 0)

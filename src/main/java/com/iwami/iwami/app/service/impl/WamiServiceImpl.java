@@ -33,8 +33,8 @@ public class WamiServiceImpl implements WamiService{
 	}
 
 	@Override
-	public Map<Long, Wami> getDoneTaskIds(long userid, Date start) {
-		return wamiDao.getDoneTaskIds(userid, start);
+	public Map<Long, Wami> getDoneTaskIds(long userid/*, Date start*/) {
+		return wamiDao.getDoneTaskIds(userid/*, start*/);
 	}
 
 	@Override

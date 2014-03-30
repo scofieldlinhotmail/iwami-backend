@@ -120,7 +120,7 @@ public class PresentAjax {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		
 		try{
-			if(params.containsKey("userid") && params.containsKey("ids") && params.containsKey("counts") && params.containsKey("channel")){
+			if(params.containsKey("userid") && params.containsKey("ids") && params.containsKey("counts") && params.containsKey("channels")){
 				long userid = NumberUtils.toLong(params.get("userid"), -1);
 				if(userid > 0){
 					// 1. split ids
@@ -145,6 +145,8 @@ public class PresentAjax {
 								}
 								
 								if(counts.size() == ids.size()){
+									String[] channels = StringUtils.split(StringUtils.trimToEmpty(params.get("channels")), IWamiConstants.SEPARATOR_PRESENT);
+										
 									User user = userBiz.getUserById(userid);
 									if(user != null){
 										// 3. get present by ids
@@ -152,14 +154,15 @@ public class PresentAjax {
 										// 4. present count = ids.length?
 										if(presents != null && presents.size() == ids.size()){
 											// 5. group by type
-											List<Present> onlineExpress = new ArrayList<Present>();
+											List<Present> offlines = new ArrayList<Present>();
 			
 											for(Present present : presents.values())
 												if(present.getType() == Present.TYPE_OFFLINE)
-													onlineExpress.add(present);
+													offlines.add(present);
 											
-											if(onlineExpress.size() == ids.size()){
+											if(offlines.size() == ids.size()){
 												Map<Present, Integer> presentCnts = new HashMap<Present, Integer>();
+												Map<Present, String> presentChannels = new HashMap<Present, String>();
 												int allPrize = 0;
 												for(int i = 0; i < ids.size(); i ++){
 													long tmpid = ids.get(i);
@@ -169,9 +172,12 @@ public class PresentAjax {
 													
 													allPrize += (present.getPrize() * tmpCnt);
 													presentCnts.put(present, tmpCnt);
+													
+													if(channels != null && channels.length > i)
+														presentChannels.put(present, channels[i]);
 												}
 												
-												if(allPrize <= user.getCurrentPrize() && presentBiz.exchangeOffline(user, presentCnts, StringUtils.trimToEmpty(params.get("channel"))))
+												if(allPrize <= user.getCurrentPrize() && presentBiz.exchangeOffline(user, presentCnts, presentChannels))
 													result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
 												else {
 													result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_ERROR_EXCHANGE_NOTENOUGHT_PRIZE);
