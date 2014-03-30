@@ -42,6 +42,11 @@ public class WamiServiceImpl implements WamiService{
 		return wamiDao.getOngoingWami(userid);
 	}
 
+	@Override
+	public List<Wami> getWamiHistory(long userid, int status) {
+		return wamiDao.getWamiHistory(userid, status);
+	}
+
 	public WamiDao getWamiDao() {
 		return wamiDao;
 	}

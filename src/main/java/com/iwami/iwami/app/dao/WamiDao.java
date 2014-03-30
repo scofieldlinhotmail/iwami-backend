@@ -18,5 +18,7 @@ public interface WamiDao {
 	public Map<Long, Wami> getOngoingWami(long userid);
 
 	public Wami getWamiByType(long userid, long taskid, int type);
+
+	public List<Wami> getWamiHistory(long userid, int status);
 	
 }

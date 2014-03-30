@@ -81,6 +81,12 @@ public class WamiDaoImpl extends JdbcDaoSupport implements WamiDao {
 		return wamis;
 	}
 
+	@Override
+	public List<Wami> getWamiHistory(long userid, int status) {
+		return getJdbcTemplate().query("select id, userid, task_id, type, prize, channel, add_time, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_WAMI + " where isdel = ? and userid = ? and type = ?", 
+				new Object[]{0, userid, status}, new WamiRowMapper());
+	}
+
 }
 
 class WamiRowMapper implements RowMapper<Wami>{

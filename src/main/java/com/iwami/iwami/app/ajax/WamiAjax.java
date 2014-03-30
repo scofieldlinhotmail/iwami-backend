@@ -1,6 +1,8 @@
 package com.iwami.iwami.app.ajax;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +23,8 @@ import com.iwami.iwami.app.exception.TaskUnavailableException;
 import com.iwami.iwami.app.exception.TaskWamiedException;
 import com.iwami.iwami.app.model.Task;
 import com.iwami.iwami.app.model.User;
+import com.iwami.iwami.app.model.Wami;
+import com.iwami.iwami.app.util.IWamiUtils;
 
 @AjaxClass
 public class WamiAjax {
@@ -161,6 +165,68 @@ public class WamiAjax {
 				logger.error("Exception in wami", t);
 			result.put(ErrorCodeConstants.STATUS_KEY,ErrorCodeConstants.STATUS_ERROR);
 		}
+		return result;
+	}
+
+	@AjaxMethod(path = "wami/history.ajax")
+	public Map<Object, Object> getWamiHistory(Map<String,String> params) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		try {
+			if(params.containsKey("userid")){
+				long userid = NumberUtils.toLong(params.get("userid"), -1);
+				if(userid > 0){
+					User user = userBiz.getUserById(userid);
+					if(user != null && user.getId() == userid){
+						List<Wami> wamis = wamiBiz.getWamiHistory(userid);
+						
+						result.put("data", parseWami(wamis));
+						result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_OK);
+					} else {
+						result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_WAMI_USERID);
+						result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_WAMI_USERID));
+					}
+				} else {
+					result.put(ErrorCodeConstants.STATUS_KEY, ErrorCodeConstants.STATUS_WAMI_USERID);
+					result.put(ErrorCodeConstants.MSG_KEY, ErrorCodeConstants.ERROR_MSG_MAP.get(ErrorCodeConstants.STATUS_WAMI_USERID));
+				}
+			} else
+				result.put(ErrorCodeConstants.STATUS_KEY,ErrorCodeConstants.STATUS_PARAM_ERROR);
+		} catch (Throwable t) {
+			if (logger.isErrorEnabled()) 
+				logger.error("Exception in getWamiHistory", t);
+			result.put(ErrorCodeConstants.STATUS_KEY,ErrorCodeConstants.STATUS_ERROR);
+		}
+		return result;
+	}
+
+	private Map<String, List<Map<String, Object>>> parseWami(List<Wami> wamis) {
+		Map<String, List<Map<String, Object>>> result = new HashMap<String, List<Map<String,Object>>>();
+		
+		if(wamis != null && wamis.size() > 0)
+			for(Wami wami : wamis){
+				String key = IWamiUtils.getDayDate(wami.getLastmodTime());
+				
+				List<Map<String, Object>> tmp = result.get(key);
+				if(tmp == null){
+					tmp = new ArrayList<Map<String,Object>>();
+					result.put(key, tmp);
+				}
+				
+				tmp.add(parseWami(wami));
+			}
+		
+		return result;
+	}
+
+	private Map<String, Object> parseWami(Wami wami) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		if(wami != null){
+			Task task = taskBiz.getTaskById(wami.getTaskId());
+			result.put("taskName", task.getName());
+			result.put("prize", wami.getPrize());
+		}
+		
 		return result;
 	}
 

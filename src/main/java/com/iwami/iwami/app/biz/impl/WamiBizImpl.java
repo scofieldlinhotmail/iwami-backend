@@ -1,6 +1,7 @@
 package com.iwami.iwami.app.biz.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +91,11 @@ public class WamiBizImpl  implements WamiBiz {
 			taskService.incrTaskCurrentPrize(task.getId());
 			userService.addUserCurrentPrize(user.getId(), task.getPrize());
 		}
+	}
+
+	@Override
+	public List<Wami> getWamiHistory(long userid) {
+		return wamiService.getWamiHistory(userid, Task.STATUS_FINISH);
 	}
 	
 	public WamiService getWamiService() {
