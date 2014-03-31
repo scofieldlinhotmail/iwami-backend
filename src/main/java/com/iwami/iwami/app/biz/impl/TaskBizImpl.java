@@ -23,7 +23,6 @@ import com.iwami.iwami.app.model.TreasureConfig;
 import com.iwami.iwami.app.model.Wami;
 import com.iwami.iwami.app.service.TaskService;
 import com.iwami.iwami.app.service.WamiService;
-import com.iwami.iwami.app.util.IWamiUtils;
 
 public class TaskBizImpl implements TaskBiz {
 	
