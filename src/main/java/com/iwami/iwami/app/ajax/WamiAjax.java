@@ -1,7 +1,10 @@
 package com.iwami.iwami.app.ajax;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,7 +30,6 @@ import com.iwami.iwami.app.exception.TaskWamiedException;
 import com.iwami.iwami.app.model.Task;
 import com.iwami.iwami.app.model.User;
 import com.iwami.iwami.app.model.Wami;
-import com.iwami.iwami.app.util.IWamiUtils;
 
 @AjaxClass
 public class WamiAjax {
@@ -202,7 +205,7 @@ public class WamiAjax {
 	}
 
 	private List<Map<String, Object>> parseWami(List<Wami> wamis) {
-		Map<String, List<Map<String, Object>>> result = new HashMap<String, List<Map<String,Object>>>();
+		Map<Date, List<Map<String, Object>>> result = new HashMap<Date, List<Map<String,Object>>>();
 		
 		if(wamis != null && wamis.size() > 0){
 			List<Long> ids = new ArrayList<Long>();
@@ -212,7 +215,7 @@ public class WamiAjax {
 			Map<Long, Task> tasks = taskBiz.getTaskByIds(ids);
 			
 			for(Wami wami : wamis){
-				String key = IWamiUtils.getDayDate(wami.getLastmodTime());
+				Date key = DateUtils.truncate(wami.getLastmodTime(), Calendar.DATE);
 				
 				List<Map<String, Object>> tmp = result.get(key);
 				if(tmp == null){
@@ -227,10 +230,10 @@ public class WamiAjax {
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 		
 		if(result != null && result.size() > 0)
-			for(String key : sort(result.keySet())){
+			for(Date key : sort(result.keySet())){
 				Map<String, Object> _data = new HashMap<String, Object>();
 				
-				_data.put("time", key);
+				_data.put("time", key.getTime());
 				_data.put("data", result.get(key));
 				
 				data.add(_data);
@@ -239,10 +242,16 @@ public class WamiAjax {
 		return data;
 	}
 
-	private List<String> sort(Set<String> keys) {
-		List<String> data = new ArrayList<String>(keys);
+	private List<Date> sort(Set<Date> keys) {
+		List<Date> data = new ArrayList<Date>(keys);
 		
-		Collections.sort(data);
+		Collections.sort(data, new Comparator<Date>() {
+
+			@Override
+			public int compare(Date o1, Date o2) {
+				return o1.before(o2) ? -1 : 1;
+			}
+		});
 		
 		return data;
 	}
