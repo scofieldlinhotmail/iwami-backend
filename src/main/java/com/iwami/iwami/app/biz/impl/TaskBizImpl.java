@@ -284,6 +284,18 @@ public class TaskBizImpl implements TaskBiz {
 		return taskService.getTaskById(taskid);
 	}
 
+	@Override
+	public Map<Long, Task> getTaskByIds(List<Long> ids) {
+		List<Task> tasks= taskService.getTasksByIds(ids);
+		
+		Map<Long, Task> result = new HashMap<Long, Task>();
+		if(tasks != null && tasks.size() > 0)
+			for(Task task : tasks)
+				result.put(task.getId(), task);
+		
+		return result;
+	}
+
 	public TaskService getTaskService() {
 		return taskService;
 	}

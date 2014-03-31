@@ -1,9 +1,11 @@
 package com.iwami.iwami.app.ajax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -199,10 +201,16 @@ public class WamiAjax {
 		return result;
 	}
 
-	private Map<String, List<Map<String, Object>>> parseWami(List<Wami> wamis) {
+	private List<Map<String, Object>> parseWami(List<Wami> wamis) {
 		Map<String, List<Map<String, Object>>> result = new HashMap<String, List<Map<String,Object>>>();
 		
-		if(wamis != null && wamis.size() > 0)
+		if(wamis != null && wamis.size() > 0){
+			List<Long> ids = new ArrayList<Long>();
+			for(Wami wami : wamis)
+				ids.add(wami.getTaskId());
+			
+			Map<Long, Task> tasks = taskBiz.getTaskByIds(ids);
+			
 			for(Wami wami : wamis){
 				String key = IWamiUtils.getDayDate(wami.getLastmodTime());
 				
@@ -212,17 +220,37 @@ public class WamiAjax {
 					result.put(key, tmp);
 				}
 				
-				tmp.add(parseWami(wami));
+				tmp.add(parseWami(wami, tasks.get(wami.getTaskId())));
+			}
+		}
+		
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		
+		if(result != null && result.size() > 0)
+			for(String key : sort(result.keySet())){
+				Map<String, Object> _data = new HashMap<String, Object>();
+				
+				_data.put("time", key);
+				_data.put("data", result.get(key));
+				
+				data.add(_data);
 			}
 		
-		return result;
+		return data;
 	}
 
-	private Map<String, Object> parseWami(Wami wami) {
+	private List<String> sort(Set<String> keys) {
+		List<String> data = new ArrayList<String>(keys);
+		
+		Collections.sort(data);
+		
+		return data;
+	}
+
+	private Map<String, Object> parseWami(Wami wami, Task task) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(wami != null){
-			Task task = taskBiz.getTaskById(wami.getTaskId());
 			result.put("taskName", task.getName());
 			result.put("prize", wami.getPrize());
 		}
