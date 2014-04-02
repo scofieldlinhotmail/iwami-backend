@@ -208,4 +208,13 @@
 	<bean name="expireTime" class="java.lang.Long">
 		<constructor-arg><value>#[cache.defaultExpireTime]</value></constructor-arg>
 	</bean>
+	
+	<!-- download -->
+	<bean name="downloadservlet" class="com.iwami.iwami.app.report.servlet.DownloadServlet">
+		<property name="apkBiz" ref="apkBiz" />
+		<property name="logService" ref="logService" />
+	</bean>
+	
+	<!-- index -->
+	<bean name="indexServlet" class="com.iwami.iwami.app.report.servlet.IndexServlet" />
 </beans>

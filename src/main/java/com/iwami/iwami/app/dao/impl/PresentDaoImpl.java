@@ -38,7 +38,7 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_no, bank_name, address, name, express_name, express_no, channel, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement ps = con.prepareStatement("insert into " + SqlConstants.TABLE_EXCHANGE + "(userid, presentid, present_name, present_prize, present_type, count, prize, status, cell_phone, alipay_account, bank_account, bank_no, bank_name, address, name, express_name, express_no, channel, add_time, lastmod_time, lastmod_userid, isdel) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				ps.setObject(1, exchange.getUserid());
 				ps.setObject(2, exchange.getPresentId());
 				ps.setObject(3, exchange.getPresentName());
@@ -57,8 +57,9 @@ public class PresentDaoImpl extends JdbcDaoSupport implements PresentDao {
 				ps.setObject(16, exchange.getExpressName());
 				ps.setObject(17, exchange.getExpressNo());
 				ps.setObject(18, exchange.getChannel());
-				ps.setObject(19, exchange.getLastModUserid());
-				ps.setObject(20, 0);
+				ps.setObject(19, exchange.getAddTime());
+				ps.setObject(20, exchange.getLastModUserid());
+				ps.setObject(21, 0);
 				return ps;
 			}
 		}, holder);

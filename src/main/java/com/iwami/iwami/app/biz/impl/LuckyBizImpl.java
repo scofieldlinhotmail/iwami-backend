@@ -1,6 +1,7 @@
 package com.iwami.iwami.app.biz.impl;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -69,6 +70,7 @@ public class LuckyBizImpl implements LuckyBiz {
 		exchange.setCount(1);
 		exchange.setPrize(config.getPrize());
 		exchange.setStatus(Exchange.STATUS_NEW);
+		exchange.setAddTime(new Date());
 		if(frule != null && (frule.getCount() <= -1 || presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) <= frule.getCount())){
 			exchange.setPresentId(frule.getId());
 			exchange.setPresentName(frule.getGift());

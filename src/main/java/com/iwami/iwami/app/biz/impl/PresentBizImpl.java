@@ -3,6 +3,7 @@ package com.iwami.iwami.app.biz.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class PresentBizImpl implements PresentBiz {
 		exchange.setPrize(prize);
 		exchange.setStatus(Exchange.STATUS_NEW);
 		exchange.setLastModUserid(user.getId());
+		exchange.setAddTime(new Date());
 		
 		long exchangeid = presentService.addExchange(exchange);
 		int status = Exchange.STATUS_FAILED;
@@ -110,6 +112,7 @@ public class PresentBizImpl implements PresentBiz {
 	public boolean exchangeExpress(User user, Map<Present, Integer> presentCnts, long cellPhone, String address, String name) throws NotEnoughPrizeException {
 		int allPrize = 0;
 		List<Exchange> exchanges = new ArrayList<Exchange>();
+		Date now = new Date();
 		for(Present present : presentCnts.keySet()){
 			Exchange exchange = new Exchange();
 			exchange.setUserid(user.getId());
@@ -126,6 +129,7 @@ public class PresentBizImpl implements PresentBiz {
 			exchange.setCellPhone(cellPhone);
 			exchange.setAddress(address);
 			exchange.setName(name);
+			exchange.setAddTime(now);
 			exchange.setLastModUserid(user.getId());
 			exchanges.add(exchange);
 		}
@@ -156,6 +160,7 @@ public class PresentBizImpl implements PresentBiz {
 		exchange.setStatus(Exchange.STATUS_NEW);
 		exchange.setAlipayAccount(aliAccount);
 		exchange.setLastModUserid(user.getId());
+		exchange.setAddTime(new Date());
 		
 		long id = presentService.addExchange(exchange);
 		
@@ -183,6 +188,7 @@ public class PresentBizImpl implements PresentBiz {
 		exchange.setBankAccount(bankAccount);
 		exchange.setBankNo(bankNo);
 		exchange.setLastModUserid(user.getId());
+		exchange.setAddTime(new Date());
 		
 		long id = presentService.addExchange(exchange);
 		
@@ -207,6 +213,7 @@ public class PresentBizImpl implements PresentBiz {
 		exchange.setPrize(present.getPrize());
 		exchange.setStatus(Exchange.STATUS_NEW);
 		exchange.setCellPhone(cellPhone);
+		exchange.setAddTime(new Date());
 		exchange.setLastModUserid(user.getId());
 		
 		long id = presentService.addExchange(exchange);
@@ -291,6 +298,7 @@ public class PresentBizImpl implements PresentBiz {
 	public boolean exchangeOffline(User user, Map<Present, Integer> presentCnts, Map<Present, String> presentChannels) {
 		int allPrize = 0;
 		List<Exchange> exchanges = new ArrayList<Exchange>();
+		Date now = new Date();
 		for(Present present : presentCnts.keySet()){
 			Exchange exchange = new Exchange();
 			exchange.setUserid(user.getId());
@@ -307,6 +315,7 @@ public class PresentBizImpl implements PresentBiz {
 			if(presentChannels.containsKey(present))
 				exchange.setChannel(presentChannels.get(present));
 			exchange.setLastModUserid(user.getId());
+			exchange.setAddTime(now);
 			exchanges.add(exchange);
 		}
 		

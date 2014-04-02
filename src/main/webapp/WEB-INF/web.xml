@@ -57,6 +57,30 @@
 		<servlet-name>ajax servlet</servlet-name>
 		<url-pattern>/client/*</url-pattern>
 	</servlet-mapping>
+	
+	<!-- download -->
+	<servlet>
+		<servlet-name>downloadservlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.context.support.HttpRequestHandlerServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>downloadservlet</servlet-name>
+		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+	
+	<!-- index -->
+	<servlet>
+		<servlet-name>indexServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.context.support.HttpRequestHandlerServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>indexServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
 	<!-- *****************************************************servlet end**************************************************** -->
 	
 </web-app>

@@ -10,7 +10,7 @@ public class LogDaoImpl extends JdbcDaoSupport implements LogDao {
 
 	@Override
 	public void log(Log log) {
-		getJdbcTemplate().update("insert into " + SqlConstants.TABLE_REQUEST_LOG + "(userid, type, add_time) values(?, ?, now())", new Object[]{log.getUserid(), log.getType()});
+		getJdbcTemplate().update("insert into " + SqlConstants.TABLE_REQUEST_LOG + "(userid, type, msg, add_time) values(?, ?, ?, now())", new Object[]{log.getUserid(), log.getType(), log.getMsg()});
 	}
 
 }

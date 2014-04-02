@@ -1,8 +1,5 @@
 package com.iwami.iwami.app.ajax;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -190,17 +187,6 @@ public class UserAjax {
 	@AjaxMethod(path = "modifyuser.ajax")
 	public Map<Object, Object> modifyUserInfo(Map<String, String> params) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
-		
-		System.out.println("#######################");
-		String _job = params.get("job");
-		System.out.println(Arrays.toString(_job.getBytes()));
-		try {
-			System.out.println(new String(_job.getBytes("iso-8859-1")));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("#######################");
 		
 		try{
 			long userid = 0;
