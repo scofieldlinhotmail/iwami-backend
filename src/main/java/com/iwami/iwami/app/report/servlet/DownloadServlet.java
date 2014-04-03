@@ -17,6 +17,8 @@ import com.iwami.iwami.app.service.LogService;
 
 public class DownloadServlet implements HttpRequestHandler {
 	
+	private static final String DEFAULT_INDEX = "http://www.iwami.cn";
+
 	private Log logger = LogFactory.getLog(getClass());
 	
 	private ApkBiz apkBiz;
@@ -39,10 +41,10 @@ public class DownloadServlet implements HttpRequestHandler {
 			if(apk != null && StringUtils.isNotBlank(apk.getUrl()))
 				response.sendRedirect(apk.getUrl());
 			else
-				response.sendRedirect("http://www.iwami.cn");
+				response.sendRedirect(DEFAULT_INDEX);
 		} catch (Throwable t) {
 			logger.warn("Download redirect error. Reason:", t);
-			response.sendRedirect("http://www.iwami.cn");
+			response.sendRedirect(DEFAULT_INDEX);
 		}
 	}
 

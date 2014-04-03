@@ -98,7 +98,7 @@ class WamiRowMapper implements RowMapper<Wami>{
 		wami.setUserid(rs.getLong("userid"));
 		wami.setTaskId(rs.getLong("task_id"));
 		wami.setType(rs.getInt("type"));
-		wami.setPrize(rs.getInt("type"));
+		wami.setPrize(rs.getInt("prize"));
 		wami.setChannel(rs.getString("channel"));
 		Timestamp ts = rs.getTimestamp("add_time");
 		if(ts != null)

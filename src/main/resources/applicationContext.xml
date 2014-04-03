@@ -216,5 +216,96 @@
 	</bean>
 	
 	<!-- index -->
-	<bean name="indexServlet" class="com.iwami.iwami.app.report.servlet.IndexServlet" />
+	<bean name="indexServlet" class="com.iwami.iwami.app.report.servlet.IndexServlet">
+			<!-- UA相关MAP -->
+			<property name="uaMap">
+				<bean id="uaMap" class="java.util.LinkedHashMap">
+					<constructor-arg index="0">
+						<map>
+							<entry key="spider" value="search_engine" />
+							<entry key="googlebot" value="search_engine" />
+							<entry key="mediapartners-google" value="search_engine" />
+							<entry key="yahoo!" value="search_engine" />
+							<entry key="yodaobot" value="search_engine" />
+							<entry key="msnbot" value="search_engine" />
+							<entry key="gigabot" value="search_engine" />
+							<entry key="rss.asp" value="search_engine" />
+							<entry key="eapollobot" value="search_engine" />
+							<entry key="lanshanbot" value="search_engine" />
+							<entry key="tmcrawler" value="search_engine" />
+							<entry key="webnews " value="search_engine" />
+							<entry key="sina_weibo" value="sina_weibo" />
+							<entry key="baidu transcoder" value="baiduTranscoder" />
+							<entry key="ipad" value="mobile_ipad" />
+							<entry key="ipod" value="mobile_ipod" />
+							<entry key="iphone" value="mobile_iphone" />
+							<entry key="ios" value="mobile_ios" />
+							<entry key="windows phone 7" value="mobile_windows_phone_7" />
+							<entry key="windowsphone 7" value="mobile_windows_phone_7" />
+							<entry key="windowsphone7" value="mobile_windows_phone_7" />
+							<entry key="windows phone os 7" value="mobile_windows_phone_7" />
+							<entry key="windowsphone os 7" value="mobile_windows_phone_7" />
+							<entry key="window phone os 7" value="mobile_windows_phone_7" />
+							<entry key="windowphone os 7" value="mobile_windows_phone_7" />
+							<entry key="wp7" value="mobile_windows_phone_7" />
+							<entry key="windows phone" value="mobile_windows_phone" />
+							<entry key="android" value="mobile_android" />
+							<entry key="mqqbrowser" value="mqqbrowser" />
+							<entry key="gobrowser" value="gobrowser" />
+							<entry key="ucweb" value="mobile_ucweb" />
+							<entry key="opera mobi" value="mobile_opera" />
+							<entry key="opera mini" value="mobile_opera" />
+							<entry key="nokia" value="nokia" />
+							<entry key="samsung" value="samsung" />
+							<entry key="msie" value="ie" />
+							<entry key="360" value="360" />
+							<entry key="metasr" value="sogou" />
+							<entry key="se 1.x" value="sogou" />
+							<entry key="se 2.x" value="sogou" />
+							<entry key="the world" value="world" />
+							<entry key="tencenttraveler" value="tt" />
+							<entry key="avant" value="avant" />
+							<entry key="qqbrowser" value="qqbrowser" />
+							<entry key="maxthon" value="maxthon" />
+							<entry key="chrome" value="chrome" />
+							<entry key="safari" value="safari" />
+							<entry key="opera" value="opera" />
+							<entry key="firefox" value="firefox" />
+						</map>
+					</constructor-arg>
+				</bean>
+			</property>
+
+			<property name="types">
+				<bean class="java.util.HashMap">
+					<constructor-arg index="0">
+						<map value-type="java.lang.Integer">
+							<entry key="mobile_android" value="1" />
+							<entry key="mqqbrowser" value="1" />
+							<entry key="gobrowser" value="1" />
+							<entry key="mobile_iphone" value="2" />
+							<entry key="mobile_ipod" value="2" />
+							<entry key="mobile_ios" value="2" />
+							<entry key="mobile_windows_phone_7" value="3" />
+							<entry key="chrome" value="4" />
+							<entry key="safari" value="4" />
+							<entry key="firefox" value="4" />
+							<entry key="360" value="4" />
+							<entry key="sogou" value="4" />
+							<entry key="maxthon" value="4" />
+							<entry key="world" value="4" />
+							<entry key="tt" value="4" />
+							<entry key="avant" value="4" />
+							<entry key="qqbrowser" value="4" />
+							<entry key="opera" value="4" />
+							<entry key="ie" value="5" />
+							<entry key="search_engine" value="6" />
+							<entry key="baiduTranscoder" value="7" />
+							<entry key="mobile_ipad" value="8" />
+							<entry key="sina_weibo" value="9" />
+						</map>
+					</constructor-arg>
+				</bean>
+			</property>
+	</bean>
 </beans>
