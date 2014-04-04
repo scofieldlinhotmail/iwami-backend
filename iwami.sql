@@ -96,6 +96,13 @@ create table  tips (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `tips` (type, content, lastmod_time, lastmod_userid)
+VALUES (0,'快来挖米吧！',now(),0),
+(4,'18610933194',now(),0),
+(2,'4月10日，一大波礼物即将上线，电话卡、Q币卡、小米手机、iPhone手机，敬请期待！',now(),0),
+(1,'没有任务了，请稍后再刷新~',now(),0),
+(3,'爱挖米真是个神一样的软件，不但下载APP全免费，积分还可以兑换鸡腿、电话卡……甚至金条！100%有奖！猛戳下载：http://www.iwami.cn',now(),0);
+
 
 -- 米粒任务列表
 create table task (
@@ -127,6 +134,11 @@ create table task (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `task` (name, rank, intr, appintr, prize, type, start_time, lastmod_time, lastmod_userid, icon_small, icon_big)
+VALUES ('微博分享',1,'测试微博分享','微博分享',31,4,now(),now(),0,'http://yy.iwami.cn/file/1395069977225.aaa.png','http://yy.iwami.cn/file/1395069977225.aaa.png'),
+('微信分享',2,'微信分享','微信分享',35,4,now(),now(),0,'http://yy.iwami.cn/file/1395069977225.aaa.png','http://yy.iwami.cn/file/1395069977225.aaa.png'),
+('朋友圈',0,'朋友圈','朋友圈',34,4,now(),now(),0,'http://yy.iwami.cn/file/1395069977225.aaa.png','http://yy.iwami.cn/file/1395069977225.aaa.png');
+
 -- 挖米表
 create table wami (
 	id bigint(20) not null auto_increment comment "自增id",
@@ -156,12 +168,16 @@ create table present (
 	type tinyint(3) not null comment "类型：0线上快递，1线上手机充值卡，2线上支付宝，3线上银行卡，4线下, 5抽奖",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
+  channel varchar(50) comment "渠道",
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除，2是仅后端显示",
 	icon_small varchar(1024) not null  comment "Icon小图",
 	icon_big varchar(1024)  comment "Icon大图",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `present` (name, prize, count, rank, type, lastmod_time, lastmod_userid, icon_small)
+VALUES ('支付宝提现',10,10,0,2,now(),0,'http://pic.iwami.cn/lipin/zhifubao.png'),
+('银行卡提现',5,10,0,3,now(),0,'http://pic.iwami.cn/lipin/bankcard.jpg');
 
 
 -- 礼品兑换表
@@ -213,6 +229,9 @@ create table user (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+insert into user(id, current_prize, exchange_prize, lastmod_time, lastmod_userid, isdel)
+values(1, 0, 0, now(), 0, 3);
+
 -- 用户信息表
 create table user_info (
 	userid bigint(20) not null comment "用户id",
@@ -232,6 +251,9 @@ create table user_info (
 	index uiid (cell_phone)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+insert into user_info(userid, name, uuid, alias, cell_phone, add_time, lastmod_time, lastmod_userid, isdel)
+values(1, 'admin', 'admin', 'admin', 0, now(), now(), 0, 3);
+
 -- 用户信息表
 create table user_role (
 	userid bigint(20) not null comment "用户id",
@@ -245,8 +267,8 @@ create table user_role (
 	unique index urname(name)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
+insert into user_role(userid, name, password, role, lastmod_time, lastmod_userid)
+values(1, 'admin', 'admin', 268435455, now(), 0);
 
 -- 验证码表
 create table code (
@@ -275,6 +297,10 @@ create table contact (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `contact` (phone1, email1, domain, qq, qqgroup, phone2, email2, lastmod_time, lastmod_userid)
+VALUES ('010-62675888','service@iwami.cn','www.iwami.cn',1865545221,'338866688(可加)\r\n102613421(可加)\r\n88490652  (已满)\r\n316211268(已满)\r\n25465656（可加）','18610261342','hezuo@iwami.cn',now(),0);
+
+
 -- 抽奖表
 create table luck_rule (
 	id int(10) not null auto_increment comment "自增id",
@@ -288,6 +314,12 @@ create table luck_rule (
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `luck_rule`(index_lev,gift,prob,`count`,lastmod_time,lastmod_userid) 
+VALUES (1,'一等奖',1,1,now(),0),
+(2,'二等奖',50,5,now(),0),
+(3,'三等奖',500,20,now(),0),
+(4,'四等奖',10000,1000,now(),0);
+
 -- apk 下载地址
 create table apk(
 	id bigint(20) not null auto_increment comment "自增id",
@@ -300,6 +332,9 @@ create table apk(
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `apk`(version, url, `force`, `desc`, lastmod_time, lastmod_userid) 
+VALUES ('1.0.0','http://115.28.17.121/iwami.apk',0,'爱挖米APK',now(),0);
 
 -- 兑换分享记录表
 create table share (
@@ -323,6 +358,10 @@ create table treasure_config (
 	isdel tinyint(3) not null default 0 comment "0是前端展示,1是删除",
 	primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `treasure_config` (days, count, lastmod_time, lastmod_userid)
+VALUES (1,9,now(),0);
+
 
 -- task finish sms notification
 create table task_notification(
@@ -367,7 +406,7 @@ create table push_task(
 -- login
 create table admin_login(
 	userid bigint(20) not null comment "用户id",
-	add_time datetime not null comment "推送开始时间",
+	add_time datetime not null comment "登陆时间",
 	index aluid (userid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
