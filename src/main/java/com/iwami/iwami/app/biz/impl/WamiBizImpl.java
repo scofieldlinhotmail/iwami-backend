@@ -34,7 +34,11 @@ public class WamiBizImpl  implements WamiBiz {
 		Wami wami = new Wami();
 		wami.setUserid(user.getId());
 		wami.setTaskId(task.getId());
+		
+		if(lastestWami != null)
+			type = type + 10;
 		wami.setType(type);
+		
 		wami.setPrize(task.getPrize());
 		wami.setChannel(channel);
 		wami.setAddTime(new Date(time));
