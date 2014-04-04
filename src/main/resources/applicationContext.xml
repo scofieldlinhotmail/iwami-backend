@@ -258,6 +258,7 @@
 							<entry key="nokia" value="nokia" />
 							<entry key="samsung" value="samsung" />
 							<entry key="msie" value="ie" />
+							<entry key="rv:11.0" value="ie" />
 							<entry key="360" value="360" />
 							<entry key="metasr" value="sogou" />
 							<entry key="se 1.x" value="sogou" />

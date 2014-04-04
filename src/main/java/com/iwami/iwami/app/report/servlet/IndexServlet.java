@@ -59,22 +59,19 @@ public class IndexServlet implements HttpRequestHandler {
 			if(types.containsKey(tmp))
 				type = types.get(tmp);
 			
-			String url = "http://www.iwami.cn/wx";
+			String url = "http://www.iwami.cn/wx/index.html";
 	        switch (type) {
 	            case UA_TYPE_ANDROID:
 	            case UA_TYPE_IOS:
 	            case UA_TYPE_IPAD:
 	            case UA_TYPE_WINDOWS_PHONE_7:
 	            case UA_TYPE_SEARCH_ENGINE:
-	                break;
-	            case UA_TYPE_PC_BROWSER:
-	            case UA_TYPE_PC_IE:
-	            	url = "http://www.iwami.cn/index.html";
-	                break;
 	            case UA_TYPE_SINA_WEIBO:
 	            case UA_TYPE_DUMBPHONE:
 	            case UA_TYPE_BAIDU_TRANSCODER:
 	                break;
+	            case UA_TYPE_PC_BROWSER:
+	            case UA_TYPE_PC_IE:
 	            default:
 	            	url = "http://www.iwami.cn/index.html";
 	        }
