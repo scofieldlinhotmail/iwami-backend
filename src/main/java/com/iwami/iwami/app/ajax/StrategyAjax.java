@@ -220,6 +220,7 @@ public class StrategyAjax {
 				Map<String, Object> tmp = new HashMap<String, Object>();
 				
 				tmp.put("id", image.getId());
+				tmp.put("strategyid", image.getStrategyId());
 				tmp.put("rank", image.getRank());
 				tmp.put("url", image.getIconUrl());
 				

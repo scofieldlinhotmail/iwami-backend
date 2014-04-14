@@ -20,7 +20,7 @@ public class StrategyDaoImpl extends JdbcDaoSupport implements StrategyDao {
 
 	@Override
 	public List<StrategyImage> getAllStrategyImages() {
-		return getJdbcTemplate().query("select id, rank, icon_url, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_STRATEGY_IMAGES + " where isdel = ?", 
+		return getJdbcTemplate().query("select id, strategy_id, rank, icon_url, lastmod_time, lastmod_userid from " + SqlConstants.TABLE_STRATEGY_IMAGES + " where isdel = ?", 
 				new Object[]{0}, new StrategyImageRowMapper());
 	}
 
@@ -128,6 +128,7 @@ class StrategyImageRowMapper implements RowMapper<StrategyImage>{
 	public StrategyImage mapRow(ResultSet rs, int index) throws SQLException {
 		StrategyImage image = new StrategyImage();
 		image.setId(rs.getLong("id"));
+		image.setStrategyId(rs.getLong("strategy_id"));
 		image.setRank(rs.getInt("rank"));
 		image.setIconUrl(rs.getString("icon_url"));
 		Timestamp ts = rs.getTimestamp("lastmod_time");

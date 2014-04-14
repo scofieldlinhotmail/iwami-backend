@@ -23,6 +23,7 @@ create table onstart (
 -- 攻略列表焦点图
 create table  strategy_images (
 	id bigint(20) not null auto_increment  comment "自增id",
+	strategy_id bigint(20) default 0 comment "攻略id",
 	rank int(10)  not null comment  "顺序",
 	lastmod_time datetime not null comment "上次修改时间",
 	lastmod_userid bigint(20) not null comment "上次修改人",
@@ -35,7 +36,7 @@ create table  strategy_images (
 create table  strategy_list (
 	id bigint(20) not null auto_increment comment "自增id",
 	name varchar(255) not null comment "标题",
-	subname varchar(255) not null comment "子标题",
+	subname varchar(255) comment "子标题",
 	intr varchar(255) comment "简介",
 	rank int(10)  not null comment  "顺序",
 	lastmod_time datetime not null comment "上次修改时间",
@@ -177,7 +178,8 @@ create table present (
 
 INSERT INTO `present` (name, prize, count, rank, type, lastmod_time, lastmod_userid, icon_small)
 VALUES ('支付宝提现',10,10,0,2,now(),0,'http://pic.iwami.cn/lipin/zhifubao.png'),
-('银行卡提现',5,10,0,3,now(),0,'http://pic.iwami.cn/lipin/bankcard.jpg');
+('银行卡提现',5,10,0,3,now(),0,'http://pic.iwami.cn/lipin/bankcard.jpg'),
+('抽奖',1,-1,0,5,now(),0,'http://yy.iwami.cn/file/1395069977225.aaa.png');
 
 
 -- 礼品兑换表

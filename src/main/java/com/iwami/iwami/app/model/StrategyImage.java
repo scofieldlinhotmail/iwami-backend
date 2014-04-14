@@ -10,6 +10,8 @@ public class StrategyImage {
 
 	private long id;
 	
+	private long strategyId;
+	
 	private int rank;
 	
 	private String iconUrl;
@@ -71,5 +73,13 @@ public class StrategyImage {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public long getStrategyId() {
+		return strategyId;
+	}
+
+	public void setStrategyId(long strategyId) {
+		this.strategyId = strategyId;
 	}
 }

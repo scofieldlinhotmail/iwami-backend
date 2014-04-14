@@ -57,8 +57,10 @@ public class LuckyBizImpl implements LuckyBiz {
 		int prob = new Random(System.currentTimeMillis()).nextInt(10000);
 		for(LuckyRule rule : rules){
 			prob = prob - rule.getProb();
-			if(prob < 0)
+			if(prob < 0){
 				frule = rule;
+				break;
+			}
 		}
 		
 		Exchange exchange = new Exchange();
@@ -71,7 +73,7 @@ public class LuckyBizImpl implements LuckyBiz {
 		exchange.setPrize(config.getPrize());
 		exchange.setStatus(Exchange.STATUS_NEW);
 		exchange.setAddTime(new Date());
-		if(frule != null && (frule.getCount() <= -1 || presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) <= frule.getCount())){
+		if(frule != null && (frule.getCount() <= -1 || presentService.getLuckyExchangeCount(frule.getId(), IWamiUtils.getTodayStart()) < frule.getCount())){
 			exchange.setPresentId(frule.getId());
 			exchange.setPresentName(frule.getGift());
 			exchange.setPresentPrize(frule.getIndexLevel());
